@@ -40,4 +40,28 @@ export const parishes = [
   "St. Mary",
   "Portland",
   "St. Thomas",
-]
+] as const
+
+export type Parish = (typeof parishes)[number]
+
+export const parishDeliveryFees: Record<Parish, number> = {
+  Kingston: 400,
+  "St. Andrew": 400,
+  "St. Catherine": 400,
+  "St. Thomas": 1000,
+  Clarendon: 1000,
+  "St. Mary": 1500,
+  Portland: 1500,
+  Manchester: 1500,
+  "St. Ann": 1500,
+  "St. Elizabeth": 2500,
+  Trelawny: 2500,
+  "St. James": 3000,
+  Westmoreland: 3500,
+  Hanover: 3500,
+}
+
+export function getParishDeliveryFee(parish: string | null | undefined) {
+  if (!parish || !(parish in parishDeliveryFees)) return null
+  return parishDeliveryFees[parish as Parish]
+}

@@ -8,8 +8,13 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { parishes } from "@/lib/product"
 
-export function PaymentForm() {
+export function PaymentForm({
+  onParishChange,
+}: {
+  onParishChange?: (parish: string | null) => void
+}) {
   const [submitted, setSubmitted] = useState(false)
+  const [parish, setParish] = useState<string | null>(null)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -43,7 +48,14 @@ export function PaymentForm() {
 
         <Field>
           <FieldLabel htmlFor="parish">Parish</FieldLabel>
-          <Select required>
+          <Select
+            required
+            value={parish}
+            onValueChange={(value) => {
+              setParish(value)
+              onParishChange?.(value)
+            }}
+          >
             <SelectTrigger id="parish" className="w-full">
               <SelectValue placeholder="Select parish" />
             </SelectTrigger>
