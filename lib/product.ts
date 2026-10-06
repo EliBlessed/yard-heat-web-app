@@ -7,7 +7,7 @@ export type BottleSize = {
 
 export const sauce = {
   slug: "scorpion-scotch-bonnet",
-    name: "Fire-Roasted Scotch Bonnet Sauce",
+    name: "Scorpion Scotch Bonnet Sauce",
   tagline: "Small-batch heat, bottled in Kingston",
   description:
         "Fire-roasted Jamaican Scotch bonnet peppers slow-simmered with scallion, allspice and a squeeze of lime. No fillers, no shortcuts — just the real yard-style heat.",
