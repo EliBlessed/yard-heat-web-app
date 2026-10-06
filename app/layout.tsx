@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Archivo_Black } from 'next/font/google'
+import { ResizeObserverErrorGuard } from '@/components/resize-observer-error-guard'
 import './globals.css'
 
 const archivoBlack = Archivo_Black({
