@@ -22,7 +22,7 @@ export function SiteHeader() {
         <Link href="/" className="hover:text-primary transition-colors">
           Home
         </Link>
-        <Link href="/product" className="hover:text-primary transition-colors">
+        <Link href="/shop" className="hover:text-primary transition-colors">
           Shop
         </Link>
       </nav>

@@ -29,9 +29,9 @@ export default function HomePage() {
                 size="lg"
                 className="rounded-full px-7 text-base"
                 nativeButton={false}
-                render={<Link href="/product" />}
+                render={<Link href="/shop" />}
               >
-                Shop sauces
+                Shop all
                 <ArrowRight data-icon="inline-end" />
               </Button>
             </div>

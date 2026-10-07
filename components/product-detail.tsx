@@ -8,15 +8,15 @@ import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { HeatRating } from "@/components/heat-rating"
-import { sauce, formatJMD } from "@/lib/product"
+import { formatJMD, type Product } from "@/lib/product"
 
-export function ProductDetail() {
+export function ProductDetail({ product }: { product: Product }) {
   const router = useRouter()
-  const [sizeId, setSizeId] = useState(sauce.sizes[1].id)
-  const selected = sauce.sizes.find((s) => s.id === sizeId) ?? sauce.sizes[0]
+  const [sizeId, setSizeId] = useState((product.sizes[1] ?? product.sizes[0]).id)
+  const selected = product.sizes.find((s) => s.id === sizeId) ?? product.sizes[0]
 
   function handleBuyNow() {
-    router.push(`/checkout?size=${selected.id}`)
+    router.push(`/checkout?product=${product.slug}&size=${selected.id}`)
   }
 
   return (
@@ -25,8 +25,8 @@ export function ProductDetail() {
         <div className="absolute inset-4 rounded-[2.5rem] bg-gradient-to-br from-primary/15 via-secondary/15 to-transparent blur-2xl" />
         <div className="relative aspect-square w-full overflow-hidden rounded-[2rem] bg-card shadow-xl">
           <Image
-            src={sauce.image || "/placeholder.svg"}
-            alt={`Bottle of ${sauce.name}`}
+            src={product.image || "/placeholder.svg"}
+            alt={`${product.name}`}
             fill
             className="object-cover"
             priority
@@ -36,26 +36,26 @@ export function ProductDetail() {
 
       <div className="flex flex-col gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-secondary">{sauce.tagline}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-secondary">{product.tagline}</p>
           <h1 className="font-display mt-1 text-3xl leading-tight text-balance text-foreground sm:text-4xl">
-            {sauce.name}
+            {product.name}
           </h1>
         </div>
 
-        <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">{sauce.description}</p>
+        <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">{product.description}</p>
 
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-foreground">Heat level</span>
-          <HeatRating level={sauce.heatLevel} max={sauce.maxHeat} />
+          <HeatRating level={product.heatLevel} max={product.maxHeat} />
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium text-foreground">Bottle size</span>
+          <span className="text-sm font-medium text-foreground">{product.sizeHeading}</span>
           <RadioGroup value={sizeId} onValueChange={setSizeId} className="flex flex-wrap gap-2">
-            {sauce.sizes.map((size) => (
+            {product.sizes.map((size) => (
               <Label
                 key={size.id}
-                htmlFor={size.id}
+                htmlFor={`${product.slug}-${size.id}`}
                 className={`flex cursor-pointer flex-col items-start gap-0.5 rounded-xl border px-3.5 py-2 transition-colors ${
                   sizeId === size.id
                     ? "border-primary bg-primary/10"
@@ -63,7 +63,7 @@ export function ProductDetail() {
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <RadioGroupItem value={size.id} id={size.id} />
+                  <RadioGroupItem value={size.id} id={`${product.slug}-${size.id}`} />
                   <span className="text-sm font-semibold text-foreground">{size.label}</span>
                 </span>
                 <span className="pl-6 text-xs text-muted-foreground">{size.volume}</span>

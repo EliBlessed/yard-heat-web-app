@@ -4,9 +4,9 @@ import { useState } from "react"
 import Image from "next/image"
 import { PaymentForm } from "@/components/payment-form"
 import { Separator } from "@/components/ui/separator"
-import { sauce, formatJMD, getParishDeliveryFee, type BottleSize } from "@/lib/product"
+import { formatJMD, getParishDeliveryFee, type Product, type ProductSize } from "@/lib/product"
 
-export function CheckoutContent({ selected }: { selected: BottleSize }) {
+export function CheckoutContent({ product, selected }: { product: Product; selected: ProductSize }) {
   const [parish, setParish] = useState<string | null>(null)
   const deliveryFee = getParishDeliveryFee(parish)
   const total = deliveryFee === null ? null : selected.priceJMD + deliveryFee
@@ -19,14 +19,14 @@ export function CheckoutContent({ selected }: { selected: BottleSize }) {
         <div className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4">
           <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-muted">
             <Image
-              src={sauce.image || "/placeholder.svg"}
-              alt={`Bottle of ${sauce.name}`}
+              src={product.image || "/placeholder.svg"}
+              alt={`${product.name}`}
               fill
               className="object-cover"
             />
           </div>
           <div className="flex flex-1 flex-col gap-0.5">
-            <p className="text-sm font-semibold text-foreground">{sauce.name}</p>
+            <p className="text-sm font-semibold text-foreground">{product.name}</p>
             <p className="text-xs text-muted-foreground">
               {selected.label} &middot; {selected.volume}
             </p>
