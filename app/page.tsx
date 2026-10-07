@@ -22,7 +22,7 @@ export default function HomePage() {
             </h1>
             <p className="max-w-md text-base text-muted-foreground sm:text-lg">
               Small-batch Jamaican pepper sauces and spice rubs made with fire-roasted Scotch bonnets — no fillers,
-              all flavor.
+              all flavour.
             </p>
             <div className="flex items-center gap-4 pt-2">
               <Button
