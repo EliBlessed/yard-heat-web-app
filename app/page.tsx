@@ -6,11 +6,11 @@ import { SiteHeader } from "@/components/site-header"
 
 export default function HomePage() {
   return (
-    <main className="h-dvh overflow-hidden bg-background">
-      <div className="flex h-full flex-col">
+    <main className="min-h-dvh bg-background">
+      <div className="flex min-h-dvh flex-col">
         <SiteHeader />
 
-        <section className="grid flex-1 grid-cols-1 items-center gap-6 px-6 sm:px-10 md:grid-cols-2 md:gap-10">
+        <section className="grid flex-1 grid-cols-1 items-center gap-8 px-6 pb-8 sm:px-10 md:grid-cols-2 md:gap-10 md:pb-0">
           <div className="flex flex-col gap-5">
             <span className="inline-flex w-fit items-center rounded-full bg-secondary/15 px-3 py-1 text-xs font-semibold tracking-wide text-secondary uppercase">
               Small-batch &middot; Made in Jamaica
@@ -37,9 +37,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden h-full items-center justify-center md:flex">
+          <div className="relative flex items-center justify-center">
             <div className="absolute inset-8 rounded-[2.5rem] bg-gradient-to-br from-primary/20 via-secondary/15 to-transparent blur-2xl" />
-            <div className="relative h-[85%] w-full max-w-sm overflow-hidden rounded-[2rem] shadow-2xl">
+            <div className="relative aspect-[4/5] w-full max-w-xs overflow-hidden rounded-[2rem] shadow-2xl md:max-h-[65dvh] md:max-w-sm">
               <Image
                 src="/yard-heat-hero.png"
                 alt="Bottle of Yard Heat pepper sauce surrounded by fresh Scotch bonnet peppers"

@@ -13,10 +13,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   if (!product) notFound()
 
   return (
-    <main className="h-dvh overflow-hidden bg-background">
-      <div className="flex h-full flex-col">
+    <main className="min-h-dvh bg-background">
+      <div className="flex min-h-dvh flex-col">
         <SiteHeader />
-        <section className="flex-1 px-6 pb-6 sm:px-10">
+        <section className="flex-1 px-6 pb-8 sm:px-10">
           <ProductDetail product={product} />
         </section>
       </div>

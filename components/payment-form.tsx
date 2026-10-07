@@ -10,8 +10,10 @@ import { parishes } from "@/lib/product"
 
 export function PaymentForm({
   onParishChange,
+  onOrderPlaced,
 }: {
   onParishChange?: (parish: string | null) => void
+  onOrderPlaced?: () => void
 }) {
   const [submitted, setSubmitted] = useState(false)
   const [parish, setParish] = useState<string | null>(null)
@@ -19,11 +21,12 @@ export function PaymentForm({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setSubmitted(true)
+    onOrderPlaced?.()
   }
 
   if (submitted) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
+      <div className="flex h-full min-h-64 flex-col items-center justify-center gap-3 text-center">
         <CheckCircle2 className="size-10 text-primary" />
         <p className="font-display text-xl text-foreground">Order confirmed!</p>
         <p className="max-w-xs text-sm text-muted-foreground">

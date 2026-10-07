@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Archivo_Black } from 'next/font/google'
+import { CartProvider } from '@/components/cart-provider'
 import { ResizeObserverErrorGuard } from '@/components/resize-observer-error-guard'
 import './globals.css'
 
@@ -51,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={archivoBlack.variable}>
       <body className="antialiased">
-        {children}
+        <CartProvider>{children}</CartProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

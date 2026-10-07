@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { CartLink } from "@/components/cart-link"
 
 export function SiteHeader() {
   return (
@@ -25,6 +26,7 @@ export function SiteHeader() {
         <Link href="/shop" className="hover:text-primary transition-colors">
           Shop
         </Link>
+        <CartLink />
       </nav>
     </header>
   )
