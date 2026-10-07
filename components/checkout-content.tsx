@@ -93,7 +93,7 @@ export function CheckoutContent() {
 
       <div className="flex flex-col rounded-2xl border border-border bg-card p-5">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          Payment details
+          Delivery details
         </h2>
         <PaymentForm onParishChange={setParish} onOrderPlaced={handleOrderPlaced} />
       </div>

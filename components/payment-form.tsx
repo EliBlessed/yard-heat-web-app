@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Lock, CheckCircle2 } from "lucide-react"
+import { CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
@@ -74,35 +74,15 @@ export function PaymentForm({
           </Select>
         </Field>
 
-        <p className="text-xs text-muted-foreground">
-          This is a demo. Please don&apos;t enter real card details. Any made-up numbers will work.
+        <p className="text-sm text-muted-foreground">
+          Demo store: no payment needed. Your order won&apos;t be processed.
         </p>
-
-        <Field>
-          <FieldLabel htmlFor="card">Card number</FieldLabel>
-          <Input id="card" autoComplete="off" inputMode="numeric" placeholder="4242 4242 4242 4242" required />
-        </Field>
-
-        <div className="grid grid-cols-2 gap-3">
-          <Field>
-            <FieldLabel htmlFor="expiry">Expiry</FieldLabel>
-            <Input id="expiry" autoComplete="off" placeholder="MM/YY" required />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="cvv">CVV</FieldLabel>
-            <Input id="cvv" autoComplete="off" inputMode="numeric" placeholder="123" required />
-          </Field>
-        </div>
       </FieldGroup>
 
       <div className="mt-auto flex flex-col gap-2">
         <Button type="submit" size="lg" className="w-full rounded-full text-base">
           Place demo order
         </Button>
-        <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-          <Lock className="size-3.5" />
-          Demo only — no real payment is processed
-        </p>
       </div>
     </form>
   )
