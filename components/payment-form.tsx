@@ -74,19 +74,23 @@ export function PaymentForm({
           </Select>
         </Field>
 
+        <p className="text-xs text-muted-foreground">
+          This is a demo. Please don&apos;t enter real card details. Any made-up numbers will work.
+        </p>
+
         <Field>
           <FieldLabel htmlFor="card">Card number</FieldLabel>
-          <Input id="card" inputMode="numeric" placeholder="4242 4242 4242 4242" required />
+          <Input id="card" autoComplete="off" inputMode="numeric" placeholder="4242 4242 4242 4242" required />
         </Field>
 
         <div className="grid grid-cols-2 gap-3">
           <Field>
             <FieldLabel htmlFor="expiry">Expiry</FieldLabel>
-            <Input id="expiry" placeholder="MM/YY" required />
+            <Input id="expiry" autoComplete="off" placeholder="MM/YY" required />
           </Field>
           <Field>
             <FieldLabel htmlFor="cvv">CVV</FieldLabel>
-            <Input id="cvv" inputMode="numeric" placeholder="123" required />
+            <Input id="cvv" autoComplete="off" inputMode="numeric" placeholder="123" required />
           </Field>
         </div>
       </FieldGroup>
