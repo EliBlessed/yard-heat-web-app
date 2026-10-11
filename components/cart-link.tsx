@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ShoppingCart } from "lucide-react"
+import { ShoppingBag } from "lucide-react"
 import { useCart } from "@/components/cart-provider"
 
 export function CartLink() {
@@ -11,12 +11,19 @@ export function CartLink() {
   return (
     <Link
       href="/cart"
-      className="relative flex items-center transition-colors hover:text-primary"
+      className="relative flex items-center gap-2 rounded-full bg-foreground px-3.5 py-2 text-background transition-colors hover:bg-primary"
       aria-label={count > 0 ? `Cart, ${count} ${count === 1 ? "item" : "items"}` : "Cart"}
     >
-      <ShoppingCart className="size-5" />
+      <ShoppingBag className="size-4" aria-hidden="true" />
+      <span className="text-sm font-semibold" aria-hidden="true">
+        Cart
+      </span>
       {count > 0 && (
-        <span className="absolute -top-2 -right-3 flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] leading-4 font-semibold text-primary-foreground">
+        <span
+          data-testid="cart-count"
+          className="flex min-w-5 items-center justify-center rounded-full bg-secondary px-1.5 text-xs leading-5 font-bold text-secondary-foreground"
+          aria-hidden="true"
+        >
           {count}
         </span>
       )}

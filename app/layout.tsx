@@ -1,14 +1,22 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Archivo_Black } from 'next/font/google'
+import localFont from 'next/font/local'
 import { CartProvider } from '@/components/cart-provider'
 import { ResizeObserverErrorGuard } from '@/components/resize-observer-error-guard'
 import './globals.css'
 
-const archivoBlack = Archivo_Black({
-  subsets: ['latin'],
+// Fonts are self-hosted from npm packages, so the site never calls Google Fonts.
+const archivoBlack = localFont({
+  src: '../node_modules/@fontsource/archivo-black/files/archivo-black-latin-400-normal.woff2',
   weight: '400',
   variable: '--font-display',
+  display: 'swap',
+})
+
+const bricolage = localFont({
+  src: '../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2',
+  weight: '200 800',
+  variable: '--font-body',
   display: 'swap',
 })
 
@@ -16,7 +24,6 @@ export const metadata: Metadata = {
   title: 'Yard Heat | Small-Batch Jamaican Pepper Sauces',
   description:
     'Small-batch Jamaican pepper sauces and spice rubs, bottled hot and ready to fire up your table.',
-  generator: 'v0.app',
   icons: {
     icon: [
       {
@@ -50,9 +57,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={archivoBlack.variable}>
+    <html lang="en" className={`${archivoBlack.variable} ${bricolage.variable}`}>
       <body className="antialiased">
-        <CartProvider>{children}</CartProvider>
+        <CartProvider>
+          <a href="#main" className="skip-link">Skip to content</a>
+          {children}
+        </CartProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

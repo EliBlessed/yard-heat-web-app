@@ -163,3 +163,46 @@ export function getParishDeliveryFee(parish: string | null | undefined) {
   if (!parish || !(parish in parishDeliveryFees)) return null
   return parishDeliveryFees[parish as Parish]
 }
+
+export type ProductCategory = "sauce" | "rub"
+
+/** Rubs are sold in jars, sauces in bottles. */
+export function getCategory(product: Product): ProductCategory {
+  return product.sizeHeading === "Jar size" ? "rub" : "sauce"
+}
+
+export type HeatBand = {
+  id: "gentle" | "medium" | "hot"
+  name: string
+  description: string
+  matches: (heatLevel: number) => boolean
+}
+
+export const heatBands: HeatBand[] = [
+  {
+    id: "gentle",
+    name: "Gentle",
+    description: "Sweet and smoky first, with a warm finish. Good for anyone new to Scotch bonnet.",
+    matches: (level) => level <= 2,
+  },
+  {
+    id: "medium",
+    name: "Medium",
+    description: "Fruit up front, then the pepper builds. The everyday bottle for the table.",
+    matches: (level) => level === 3,
+  },
+  {
+    id: "hot",
+    name: "Hot",
+    description: "Proper yard heat. A few drops go a long way.",
+    matches: (level) => level >= 4,
+  },
+]
+
+export function getHeatBand(heatLevel: number) {
+  return heatBands.find((band) => band.matches(heatLevel)) ?? heatBands[heatBands.length - 1]
+}
+
+export function getLowestDeliveryFee() {
+  return Math.min(...Object.values(parishDeliveryFees))
+}

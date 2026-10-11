@@ -36,21 +36,22 @@ export function CheckoutContent() {
   }
 
   return (
-    <section className="grid flex-1 grid-cols-1 gap-6 px-6 pb-8 sm:px-10 md:grid-cols-2 md:gap-10">
+    <section className="grid flex-1 grid-cols-1 gap-6 px-5 pt-10 pb-16 sm:px-8 md:pt-14 md:grid-cols-2 md:gap-10">
       <div className="flex flex-col gap-4">
-        <h1 className="font-display text-2xl text-foreground sm:text-3xl">Checkout</h1>
+        <h1 className="font-display text-5xl leading-none tracking-tight text-foreground sm:text-6xl">Checkout</h1>
 
         <ul className="flex flex-col gap-3">
           {items.map((item) => (
             <li
               key={`${item.slug}-${item.sizeId}`}
-              className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4"
+              className="flex items-center gap-4 rounded-[1.5rem] bg-card ring-1 ring-border p-4"
             >
-              <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-muted">
+              <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl bg-muted">
                 <Image
                   src={item.product.image || "/placeholder.svg"}
                   alt={item.product.name}
                   fill
+                  sizes="80px"
                   className="object-cover"
                 />
               </div>
@@ -66,7 +67,7 @@ export function CheckoutContent() {
           ))}
         </ul>
 
-        <div className="flex flex-col gap-2.5 rounded-2xl border border-border bg-card p-4 text-sm">
+        <div className="flex flex-col gap-2.5 rounded-[1.5rem] bg-card ring-1 ring-border p-4 text-sm">
           <div className="flex items-center justify-between text-muted-foreground">
             <span>Subtotal</span>
             <span className="text-foreground">{formatJMD(subtotal)}</span>
@@ -91,8 +92,8 @@ export function CheckoutContent() {
         </p>
       </div>
 
-      <div className="flex flex-col rounded-2xl border border-border bg-card p-5">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+      <div className="flex flex-col rounded-[1.5rem] bg-card ring-1 ring-border p-5">
+        <h2 className="mb-4 font-display text-2xl text-foreground">
           Delivery details
         </h2>
         <PaymentForm onParishChange={setParish} onOrderPlaced={handleOrderPlaced} />

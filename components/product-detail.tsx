@@ -11,7 +11,7 @@ import { HeatRating } from "@/components/heat-rating"
 import { useCart } from "@/components/cart-provider"
 import { QuantitySelect, BulkOrderNote } from "@/components/quantity-select"
 import { MAX_QUANTITY } from "@/lib/cart"
-import { formatJMD, type Product } from "@/lib/product"
+import { formatJMD, getHeatBand, type Product } from "@/lib/product"
 
 export function ProductDetail({ product }: { product: Product }) {
   const router = useRouter()
@@ -37,15 +37,17 @@ export function ProductDetail({ product }: { product: Product }) {
     router.push("/checkout")
   }
 
+  const band = getHeatBand(product.heatLevel)
+
   return (
-    <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-14">
-      <div className="relative mx-auto flex w-full max-w-sm items-center justify-center">
-        <div className="absolute inset-4 rounded-[2.5rem] bg-gradient-to-br from-primary/15 via-secondary/15 to-transparent blur-2xl" />
-        <div className="relative aspect-square w-full overflow-hidden rounded-[2rem] bg-card shadow-xl">
+    <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-14">
+      <div className="relative mx-auto flex w-full max-w-md items-center justify-center md:sticky md:top-24">
+        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-muted shadow-[0_30px_60px_-30px_rgb(122_16_22/0.55)]">
           <Image
             src={product.image || "/placeholder.svg"}
             alt={`${product.name}`}
             fill
+            sizes="(min-width: 768px) 28rem, 90vw"
             className="object-cover"
             priority
           />
@@ -53,18 +55,17 @@ export function ProductDetail({ product }: { product: Product }) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-secondary">{product.tagline}</p>
-          <h1 className="font-display mt-1 text-3xl leading-tight text-balance text-foreground sm:text-4xl">
-            {product.name}
-          </h1>
-        </div>
+        <h1 className="font-display text-4xl leading-[1.02] tracking-tight text-balance text-foreground sm:text-5xl">
+          {product.name}
+        </h1>
 
-        <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">{product.description}</p>
+        <p className="max-w-prose text-base leading-relaxed text-muted-foreground">{product.description}</p>
 
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-foreground">Heat level</span>
+        <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-card px-4 py-3 ring-1 ring-border">
           <HeatRating level={product.heatLevel} max={product.maxHeat} />
+          <span className="text-sm font-semibold text-foreground">
+            {band.name} heat, {product.heatLevel} of {product.maxHeat}
+          </span>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -74,17 +75,19 @@ export function ProductDetail({ product }: { product: Product }) {
               <Label
                 key={size.id}
                 htmlFor={`${product.slug}-${size.id}`}
-                className={`flex cursor-pointer flex-col items-start gap-0.5 rounded-xl border px-3.5 py-2 transition-colors ${
+                className={`flex cursor-pointer flex-col items-start gap-0.5 rounded-2xl border-2 px-4 py-2.5 transition-colors ${
                   sizeId === size.id
-                    ? "border-primary bg-primary/10"
-                    : "border-border bg-card hover:border-primary/40"
+                    ? "border-primary bg-primary/5"
+                    : "border-border bg-card hover:border-foreground/30"
                 }`}
               >
                 <span className="flex items-center gap-2">
                   <RadioGroupItem value={size.id} id={`${product.slug}-${size.id}`} />
                   <span className="text-sm font-semibold text-foreground">{size.label}</span>
                 </span>
-                <span className="pl-6 text-xs text-muted-foreground">{size.volume}</span>
+                <span className="pl-6 text-xs text-muted-foreground">
+                  {size.volume}, {formatJMD(size.priceJMD)}
+                </span>
               </Label>
             ))}
           </RadioGroup>
@@ -102,13 +105,15 @@ export function ProductDetail({ product }: { product: Product }) {
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-xs text-muted-foreground">Price</p>
-              <p className="font-display text-3xl text-primary">{formatJMD(selected.priceJMD)}</p>
+              <p data-testid="product-price" className="font-display text-4xl text-primary">
+                {formatJMD(selected.priceJMD)}
+              </p>
             </div>
             <div className="flex flex-wrap justify-end gap-2">
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-full px-5 text-base"
+                className="h-12 rounded-full border-foreground/20 bg-transparent px-5 text-base"
                 onClick={handleAddToCart}
               >
                 {status === "added" ? (
@@ -123,7 +128,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   </>
                 )}
               </Button>
-              <Button size="lg" className="rounded-full px-7 text-base" onClick={handleBuyNow}>
+              <Button size="lg" className="h-12 rounded-full px-7 text-base" onClick={handleBuyNow}>
                 Buy Now
                 <ShoppingCart data-icon="inline-end" />
               </Button>

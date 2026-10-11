@@ -13,19 +13,19 @@ import { formatJMD } from "@/lib/product"
 export function CartContent() {
   const { lines, ready, removedUnavailable, dismissRemovedNotice, setQuantity, remove } = useCart()
 
-  if (!ready) return <section className="px-6 pb-10 sm:px-10" aria-busy="true" />
+  if (!ready) return <section className="px-5 pt-10 pb-16 sm:px-8 md:pt-14" aria-busy="true" />
 
   const items = resolveLines(lines)
   const subtotal = cartSubtotal(items)
 
   return (
-    <section className="px-6 pb-10 sm:px-10">
-      <h1 className="font-display text-3xl text-foreground sm:text-4xl">Your cart</h1>
+    <section className="px-5 pt-10 pb-16 sm:px-8 md:pt-14">
+      <h1 className="font-display text-5xl leading-none tracking-tight text-foreground sm:text-6xl">Your cart</h1>
 
       {removedUnavailable && (
         <div
           role="status"
-          className="mt-4 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card p-4 text-sm text-foreground"
+          className="mt-4 flex items-center justify-between gap-4 rounded-[1.5rem] bg-card ring-1 ring-border p-4 text-sm text-foreground"
         >
           <p>An item in your cart is no longer available and was removed.</p>
           <Button variant="ghost" size="sm" onClick={dismissRemovedNotice}>
@@ -35,8 +35,8 @@ export function CartContent() {
       )}
 
       {items.length === 0 ? (
-        <div className="mt-6 flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-6">
-          <p className="text-sm text-muted-foreground">Your cart is empty.</p>
+        <div className="mt-6 flex flex-col items-start gap-4 rounded-[1.5rem] bg-card ring-1 ring-border p-6">
+          <p className="text-base text-foreground">Your cart is empty. Pick a sauce or rub to get started.</p>
           <Button
             size="lg"
             className="rounded-full px-7 text-base"
@@ -52,10 +52,10 @@ export function CartContent() {
             {items.map((item) => (
               <li
                 key={`${item.slug}-${item.sizeId}`}
-                className="flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-card p-4"
+                className="flex flex-wrap items-center gap-4 rounded-[1.5rem] bg-card ring-1 ring-border p-4"
               >
-                <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-muted">
-                  <Image src={item.product.image} alt={item.product.name} fill className="object-cover" />
+                <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl bg-muted">
+                  <Image src={item.product.image} alt={item.product.name} fill sizes="80px" className="object-cover" />
                 </div>
                 <div className="flex min-w-40 flex-1 flex-col gap-0.5">
                   <Link
@@ -92,7 +92,7 @@ export function CartContent() {
             </li>
           </ul>
 
-          <div className="flex h-fit flex-col gap-3 rounded-2xl border border-border bg-card p-4 text-sm">
+          <div className="flex h-fit flex-col gap-3 rounded-[1.5rem] bg-card ring-1 ring-border p-4 text-sm">
             <div className="flex items-center justify-between text-muted-foreground">
               <span>Subtotal</span>
               <span className="text-foreground">{formatJMD(subtotal)}</span>
