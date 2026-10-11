@@ -11,6 +11,7 @@ export function CartLink() {
   return (
     <Link
       href="/cart"
+      data-cart-target
       className="relative flex items-center gap-2 rounded-full bg-foreground px-3.5 py-2 text-background transition-colors hover:bg-primary"
       aria-label={count > 0 ? `Cart, ${count} ${count === 1 ? "item" : "items"}` : "Cart"}
     >

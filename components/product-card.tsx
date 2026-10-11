@@ -3,7 +3,16 @@ import Image from "next/image"
 import { HeatRating } from "@/components/heat-rating"
 import { formatJMD, getCategory, getHeatBand, getLowestPrice, type Product } from "@/lib/product"
 
-export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
+export function ProductCard({
+  product,
+  priority = false,
+  headingLevel = 3,
+}: {
+  product: Product
+  priority?: boolean
+  headingLevel?: 2 | 3
+}) {
+  const Heading = headingLevel === 2 ? "h2" : "h3"
   const band = getHeatBand(product.heatLevel)
   const category = getCategory(product)
 
@@ -27,7 +36,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
         </span>
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">
-        <h3 className="text-lg leading-snug font-bold text-foreground">{product.name}</h3>
+        <Heading className="text-lg leading-snug font-bold text-foreground">{product.name}</Heading>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <HeatRating level={product.heatLevel} max={product.maxHeat} className="[&_svg]:size-4" />
           <span>{band.name}</span>

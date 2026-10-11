@@ -40,7 +40,7 @@ export function HeatPicker() {
               )}
             >
               <span className="font-display text-base sm:text-lg">{b.name}</span>
-              <span className={cn("text-xs font-semibold", selected ? "opacity-85" : "opacity-70")}>
+              <span className="text-xs font-semibold">
                 {count} {count === 1 ? "product" : "products"}
               </span>
             </button>

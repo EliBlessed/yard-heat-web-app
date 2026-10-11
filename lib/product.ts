@@ -36,7 +36,7 @@ export const products: Product[] = [
       "Fire-roasted Jamaican Scotch bonnet peppers slow-simmered with scallion, allspice and a squeeze of lime. No fillers, no shortcuts — just the real yard-style heat.",
     heatLevel: 4,
     maxHeat: 5,
-    image: "/yard-heat-bottle-scorpion.png",
+    image: "/yard-heat-bottle-scorpion.webp",
     sizeHeading: "Bottle size",
     sizes: bottleSizes([950, 1450, 2600]),
   },
@@ -48,7 +48,7 @@ export const products: Product[] = [
       "Ripe Jamaican mango blended with fresh Scotch bonnet, a touch of ginger and a squeeze of lime. Sweet first, then the heat builds: made for fish, chicken and anything off the grill.",
     heatLevel: 3,
     maxHeat: 5,
-    image: "/yard-heat-mango-scotch-bonnet.jpg",
+    image: "/yard-heat-mango-scotch-bonnet.webp",
     sizeHeading: "Bottle size",
     sizes: bottleSizes([1050, 1550, 2750]),
   },
@@ -60,7 +60,7 @@ export const products: Product[] = [
       "Scotch bonnet slow-cooked with pimento, scallion, thyme and garlic, the flavours of a jerk pit in a bottle. No fillers, no shortcuts, just real yard-style smoke and fire.",
     heatLevel: 4,
     maxHeat: 5,
-    image: "/yard-heat-smoky-jerk.jpg",
+    image: "/yard-heat-smoky-jerk.webp",
     sizeHeading: "Bottle size",
     sizes: bottleSizes([950, 1450, 2600]),
   },
@@ -72,7 +72,7 @@ export const products: Product[] = [
       "Sweet guava simmered down with brown sugar, pimento and a measured hit of Scotch bonnet, into a thick, sticky glaze. Brush it on ribs or chicken in the last minutes of grilling.",
     heatLevel: 2,
     maxHeat: 5,
-    image: "/yard-heat-guava-bbq.jpg",
+    image: "/yard-heat-guava-bbq.webp",
     sizeHeading: "Bottle size",
     sizes: [
       { id: "250ml", label: "250 ml", volume: "Kitchen bottle", priceJMD: 1650 },
@@ -87,7 +87,7 @@ export const products: Product[] = [
       "A dry blend of ground pimento, thyme, scallion, garlic, black pepper and dried Scotch bonnet. Rub it into chicken or pork and leave it overnight, for jerk flavour without the marinade.",
     heatLevel: 3,
     maxHeat: 5,
-    image: "/yard-heat-jerk-rub.jpg",
+    image: "/yard-heat-jerk-rub.webp",
     sizeHeading: "Jar size",
     sizes: [
       { id: "100g", label: "100 g", volume: "Small jar", priceJMD: 800 },
@@ -102,7 +102,7 @@ export const products: Product[] = [
       "Smoked paprika, brown sugar, garlic, onion and pimento, with a gentle kick of Scotch bonnet. It builds a sweet, smoky crust on anything headed for the grill.",
     heatLevel: 2,
     maxHeat: 5,
-    image: "/yard-heat-bbq-rub.jpg",
+    image: "/yard-heat-bbq-rub.webp",
     sizeHeading: "Jar size",
     sizes: [
       { id: "100g", label: "100 g", volume: "Small jar", priceJMD: 750 },
@@ -205,4 +205,38 @@ export function getHeatBand(heatLevel: number) {
 
 export function getLowestDeliveryFee() {
   return Math.min(...Object.values(parishDeliveryFees))
+}
+
+/** Serving ideas shown on each product page, matched to each product's description. */
+export const servingIdeas: Record<string, string[]> = {
+  "fire-roasted-scotch-bonnet": [
+    "A few drops on ackee and saltfish or callaloo",
+    "Stirred into soups and stews at the end of cooking",
+    "Mixed with mayonnaise for a fiery sandwich spread",
+  ],
+  "mango-scotch-bonnet": [
+    "Spooned over grilled or escoveitch fish",
+    "As a dip for fried chicken or festival",
+    "Brushed on prawns in the last minute on the grill",
+  ],
+  "smoky-jerk": [
+    "Mixed into rice and peas or roast breadfruit",
+    "Stirred through a pot of stew peas",
+    "As a marinade booster for chicken or pork",
+  ],
+  "guava-bbq": [
+    "Brushed on ribs or chicken in the last few minutes of grilling",
+    "As a glaze for baked ham",
+    "Mixed with a little lime juice as a wing sauce",
+  ],
+  "jerk-rub": [
+    "Rubbed into chicken or pork and left overnight",
+    "Sprinkled on roast potatoes or sweet potato wedges",
+    "Mixed with oil and lime for a quick fish seasoning",
+  ],
+  "bbq-rub": [
+    "Rubbed on ribs or chicken before grilling",
+    "Tossed with popcorn or roasted peanuts",
+    "Sprinkled over corn on the cob with butter",
+  ],
 }

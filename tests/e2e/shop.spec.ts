@@ -163,3 +163,48 @@ test("keyboard users can skip to the main content", async ({ page }) => {
   await skip.press("Enter")
   await expect(page).toHaveURL(/#main$/)
 })
+
+test("product page lists serving ideas", async ({ page }) => {
+  await page.goto("/product/guava-bbq")
+  await expect(page.getByRole("heading", { name: "Try it on" })).toBeVisible()
+  await expect(page.getByText("As a glaze for baked ham")).toBeVisible()
+})
+
+test("adding to cart plays the fly-to-cart animation and cleans up after it", async ({ page }) => {
+  await page.goto("/product/guava-bbq")
+  await page.getByRole("button", { name: /Add to cart/ }).click()
+  // The flying copy of the photo appears, then is removed when it lands.
+  await expect(page.locator("body > img[aria-hidden=true]")).toHaveCount(1)
+  await expect(page.locator("body > img[aria-hidden=true]")).toHaveCount(0, { timeout: 3000 })
+  await expect(page.getByRole("link", { name: "Cart, 1 item" })).toBeVisible()
+})
+
+test.describe("with reduced motion", () => {
+  test.use({ reducedMotion: "reduce" })
+
+  test("everything is visible straight away and nothing flies", async ({ page }) => {
+    await page.goto("/")
+    // No entrance animation: the headline and photo are in place on first paint.
+    await expect(page.getByRole("heading", { level: 1 })).toBeInViewport()
+    const clip = await page.getByTestId("hero-arch").evaluate((el) => getComputedStyle(el).clipPath)
+    expect(clip).not.toContain("100%")
+
+    await page.goto("/product/guava-bbq")
+    await page.getByRole("button", { name: /Add to cart/ }).click()
+    await expect(page.locator("body > img[aria-hidden=true]")).toHaveCount(0)
+    await expect(page.getByRole("link", { name: "Cart, 1 item" })).toBeVisible()
+  })
+})
+
+test("every photo is compressed for fast loading", async ({ page }) => {
+  const sizes: { url: string; bytes: number }[] = []
+  page.on("response", async (res) => {
+    if (res.request().resourceType() === "image" && res.ok()) {
+      const body = await res.body().catch(() => null)
+      if (body) sizes.push({ url: res.url(), bytes: body.length })
+    }
+  })
+  for (const path of ["/", "/shop"]) await page.goto(path, { waitUntil: "networkidle" })
+  expect(sizes.length).toBeGreaterThan(0)
+  for (const { url, bytes } of sizes) expect(bytes, `${url} is ${Math.round(bytes / 1024)} KB`).toBeLessThan(250 * 1024)
+})

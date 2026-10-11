@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Check, Plus, ShoppingCart } from "lucide-react"
@@ -11,7 +11,8 @@ import { HeatRating } from "@/components/heat-rating"
 import { useCart } from "@/components/cart-provider"
 import { QuantitySelect, BulkOrderNote } from "@/components/quantity-select"
 import { MAX_QUANTITY } from "@/lib/cart"
-import { formatJMD, getHeatBand, type Product } from "@/lib/product"
+import { flyToCart } from "@/lib/fly-to-cart"
+import { formatJMD, getHeatBand, servingIdeas, type Product } from "@/lib/product"
 
 export function ProductDetail({ product }: { product: Product }) {
   const router = useRouter()
@@ -20,6 +21,7 @@ export function ProductDetail({ product }: { product: Product }) {
   const { add } = useCart()
   const [quantity, setQuantity] = useState(1)
   const [status, setStatus] = useState<"added" | "capped" | null>(null)
+  const imageRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!status) return
@@ -30,6 +32,7 @@ export function ProductDetail({ product }: { product: Product }) {
   function handleAddToCart() {
     const capped = add(product.slug, selected.id, quantity)
     setStatus(capped ? "capped" : "added")
+    if (!capped) flyToCart(imageRef.current)
   }
 
   function handleBuyNow() {
@@ -42,7 +45,9 @@ export function ProductDetail({ product }: { product: Product }) {
   return (
     <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-14">
       <div className="relative mx-auto flex w-full max-w-md items-center justify-center md:sticky md:top-24">
-        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-muted shadow-[0_30px_60px_-30px_rgb(122_16_22/0.55)]">
+        <div
+          ref={imageRef}
+          className="relative aspect-[4/5] w-full overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-muted shadow-[0_30px_60px_-30px_rgb(122_16_22/0.55)]">
           <Image
             src={product.image || "/placeholder.svg"}
             alt={`${product.name}`}
@@ -67,6 +72,20 @@ export function ProductDetail({ product }: { product: Product }) {
             {band.name} heat, {product.heatLevel} of {product.maxHeat}
           </span>
         </div>
+
+        {servingIdeas[product.slug] && (
+          <div className="flex flex-col gap-2">
+            <h2 className="text-sm font-semibold text-foreground">Try it on</h2>
+            <ul className="flex flex-col gap-1.5 text-sm text-muted-foreground">
+              {servingIdeas[product.slug].map((idea) => (
+                <li key={idea} className="flex gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-secondary" aria-hidden="true" />
+                  {idea}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium text-foreground">{product.sizeHeading}</span>
