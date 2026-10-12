@@ -1,6 +1,14 @@
+import type { Metadata } from "next"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { CheckoutContent } from "@/components/checkout-content"
+
+export const metadata: Metadata = {
+  title: "Demo checkout | Yard Heat",
+  alternates: { canonical: "/checkout" },
+  robots: { index: false, follow: true },
+}
+
 
 export default function CheckoutPage() {
   return (

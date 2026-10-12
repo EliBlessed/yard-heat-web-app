@@ -1,4 +1,7 @@
 import Link from "next/link"
+import type { Metadata } from "next"
+import { JsonLd } from "@/components/json-ld"
+import { homeStructuredData } from "@/lib/structured-data"
 import { Button } from "@/components/ui/button"
 import { SiteHeader, FlameMark } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
@@ -6,6 +9,7 @@ import { HeatPicker } from "@/components/heat-picker"
 import { Marquee } from "@/components/magicui/marquee"
 import { Hero } from "@/components/hero"
 import { ProcessSteps } from "@/components/process-steps"
+import { HomeFaq } from "@/components/home-faq"
 import { formatJMD, getLowestDeliveryFee, parishes } from "@/lib/product"
 
 const ingredients = [
@@ -21,16 +25,21 @@ const ingredients = [
 ]
 
 
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+}
+
 export default function HomePage() {
   return (
     <div className="flex min-h-dvh flex-col bg-background">
+      <JsonLd data={homeStructuredData()} />
       <SiteHeader />
 
       <main id="main">
         <Hero />
 
         <section aria-label="What goes in" className="border-y border-ember/20 bg-primary py-3 text-primary-foreground">
-          <Marquee pauseOnHover className="[--duration:35s] [--gap:2.5rem]">
+          <Marquee pauseOnHover repeat={2} className="[--duration:35s] [--gap:2.5rem]">
             {ingredients.map((item) => (
               <span key={item} className="flex items-center gap-10 font-display text-xl whitespace-nowrap sm:text-2xl">
                 {item}
@@ -60,6 +69,8 @@ export default function HomePage() {
             <ProcessSteps />
           </div>
         </section>
+
+        <HomeFaq />
 
         <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-20">
           <div className="flex flex-col items-start justify-between gap-6 rounded-[2rem] bg-scallion px-7 py-10 text-scallion-foreground md:flex-row md:items-center md:px-12">

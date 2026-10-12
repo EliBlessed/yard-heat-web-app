@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 import { CartProvider } from '@/components/cart-provider'
 import { ResizeObserverErrorGuard } from '@/components/resize-observer-error-guard'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/site'
 import './globals.css'
 
 // Fonts are self-hosted from npm packages, so the site never calls Google Fonts.
@@ -21,9 +22,18 @@ const bricolage = localFont({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Yard Heat | Small-Batch Jamaican Pepper Sauces',
   description:
     'Small-batch Jamaican pepper sauces and spice rubs, bottled hot and ready to fire up your table.',
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'en_JM',
+    description: SITE_DESCRIPTION,
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Yard Heat: small-batch Jamaican pepper sauces and spice rubs' }],
+  },
+  twitter: { card: 'summary_large_image', images: ['/og-image.jpg'] },
   icons: {
     icon: [
       {

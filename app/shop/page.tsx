@@ -9,6 +9,7 @@ import { products } from "@/lib/product"
 export const metadata: Metadata = {
   title: "Shop | Yard Heat",
   description: "Jamaican pepper sauces and spice rubs, from gentle to proper yard heat.",
+  alternates: { canonical: "/shop" },
 }
 
 export default function ShopPage() {

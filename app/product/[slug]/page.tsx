@@ -16,7 +16,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const product = getProduct(slug)
   if (!product) return {}
-  return { title: `${product.name} | Yard Heat`, description: product.description }
+  return {
+    title: `${product.name} | Yard Heat`,
+    description: product.description,
+    alternates: { canonical: `/product/${product.slug}` },
+  }
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {

@@ -34,6 +34,17 @@ export function SiteFooter() {
             Yard Heat is a fictional brand. This is a demo shop: no payments are taken and no orders are shipped.
           </p>
           <p className="text-background/70">Started from a NextWork guided project.</p>
+          <p className="flex flex-wrap gap-x-4 gap-y-1">
+            <Link href="/about" className="text-background/70 hover:text-background">
+              About
+            </Link>
+            <Link href="/contact" className="text-background/70 hover:text-background">
+              Contact
+            </Link>
+            <Link href="/privacy" className="text-background/70 hover:text-background">
+              Privacy
+            </Link>
+          </p>
         </div>
       </div>
     </footer>

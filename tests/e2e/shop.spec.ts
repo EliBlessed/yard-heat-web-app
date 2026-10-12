@@ -148,7 +148,7 @@ test("empty cart sends checkout back to the cart page", async ({ page }) => {
 })
 
 test("no page scrolls sideways on a phone-sized screen", async ({ page }) => {
-  for (const path of ["/", "/shop", "/product/guava-bbq", "/cart"]) {
+  for (const path of ["/", "/shop", "/product/guava-bbq", "/cart", "/about", "/contact", "/privacy"]) {
     await page.goto(path)
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
     expect(overflow, `${path} overflows by ${overflow}px`).toBeLessThanOrEqual(1)
