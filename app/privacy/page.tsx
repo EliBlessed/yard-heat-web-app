@@ -17,15 +17,17 @@ export default function PrivacyPage() {
         <h2 className="font-display text-2xl leading-tight tracking-tight">Your cart</h2>
         <p>
           The items you add are saved in your browser&rsquo;s local storage, so your cart is still there when you
-          come back. It never leaves your device and is never sent to a server. Clearing your browser data, or
+          come back. It stays on your device until you place a demo order. Clearing your browser data, or
           placing a demo order, empties it.
         </p>
       </section>
       <section>
         <h2 className="font-display text-2xl leading-tight tracking-tight">The checkout form</h2>
         <p>
-          The demo checkout asks for a name, address and parish only to show how delivery pricing works. The form
-          isn&rsquo;t sent anywhere, and the site never asks for card or bank details.
+          The demo checkout asks for a name, address and parish only to show how delivery pricing works. When you
+          place a demo order, only the items and the parish are sent to the shop, which checks the prices and sends
+          back an order number. Nothing is saved on the server. Your name and address never leave your browser, and
+          the receipt is kept only in that browser tab. The site never asks for card or bank details.
         </p>
       </section>
       <section>

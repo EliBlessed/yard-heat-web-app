@@ -39,3 +39,20 @@ test("buttons and controls are at least 40 px tall and wide", async ({ page }) =
   }
   expect(report).toEqual({})
 })
+
+test("the order receipt has zero axe accessibility issues", async ({ page }) => {
+  await withItemInCart(page)
+  await page.goto("/checkout")
+  await page.getByLabel("Full name").fill("Axe Test")
+  await page.getByLabel("Delivery address").fill("1 Test Road")
+  await page.locator("#parish").click()
+  await page.getByRole("option", { name: "Kingston", exact: true }).click()
+  await page.getByRole("button", { name: "Place demo order" }).click()
+  await expect(page.getByRole("heading", { name: "Demo order placed" })).toBeVisible()
+  for (const url of [page.url(), "/order/YH-ABCDEF"]) {
+    await page.goto(url)
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
+    const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze()
+    expect(violations.map((v) => v.id), url).toEqual([])
+  }
+})

@@ -1,47 +1,34 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
-import { CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { parishes } from "@/lib/product"
-import { FlameBurst } from "@/components/flame-burst"
 
 export function PaymentForm({
   onParishChange,
-  onOrderPlaced,
+  onPlaceOrder,
 }: {
   onParishChange?: (parish: string | null) => void
-  onOrderPlaced?: () => void
+  /** Places the order; resolves to an error message, or null once the order has gone through. */
+  onPlaceOrder: (parish: string) => Promise<string | null>
 }) {
-  const [submitted, setSubmitted] = useState(false)
+  const [placing, setPlacing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [parish, setParish] = useState<string | null>(null)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setSubmitted(true)
-    onOrderPlaced?.()
-  }
-
-  if (submitted) {
-    return (
-      <div className="flex h-full min-h-64 flex-col items-center justify-center gap-3 text-center">
-        <span className="relative flex size-16 items-center justify-center">
-          <FlameBurst />
-          <CheckCircle2 className="size-10 text-primary" />
-        </span>
-        <p className="font-display text-xl text-foreground">Demo order placed</p>
-        <p className="max-w-xs text-sm text-muted-foreground">
-          No payment was taken and nothing will be shipped. Thanks for trying the shop.
-        </p>
-        <Button size="lg" className="mt-2 rounded-full px-7 text-base" nativeButton={false} render={<Link href="/shop" />}>
-          Keep shopping
-        </Button>
-      </div>
-    )
+    if (!parish || placing) return
+    setPlacing(true)
+    setError(null)
+    const problem = await onPlaceOrder(parish)
+    if (problem) {
+      setError(problem)
+      setPlacing(false)
+    }
   }
 
   return (
@@ -88,8 +75,13 @@ export function PaymentForm({
       </FieldGroup>
 
       <div className="mt-auto flex flex-col gap-2">
-        <Button type="submit" size="lg" className="w-full rounded-full text-base">
-          Place demo order
+        {error && (
+          <p role="alert" className="text-sm text-destructive">
+            {error}
+          </p>
+        )}
+        <Button type="submit" size="lg" className="w-full rounded-full text-base" disabled={placing}>
+          {placing ? "Placing order…" : "Place demo order"}
         </Button>
       </div>
     </form>

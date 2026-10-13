@@ -8,12 +8,13 @@ import { Separator } from "@/components/ui/separator"
 import { useCart } from "@/components/cart-provider"
 import { cartSubtotal, resolveLines, type ResolvedCartLine } from "@/lib/cart"
 import { formatJMD, getParishDeliveryFee } from "@/lib/product"
+import { ORDER_STORAGE_PREFIX, type Order } from "@/lib/order"
 
 export function CheckoutContent() {
   const router = useRouter()
   const { lines, ready, clear } = useCart()
   const [parish, setParish] = useState<string | null>(null)
-  // Once the demo order is placed the cart is emptied; keep showing what was ordered.
+  // Once the order is placed the cart is emptied; keep showing what was ordered until the receipt opens.
   const [placedItems, setPlacedItems] = useState<ResolvedCartLine[] | null>(null)
 
   const liveItems = resolveLines(lines)
@@ -30,9 +31,34 @@ export function CheckoutContent() {
   const deliveryFee = getParishDeliveryFee(parish)
   const total = deliveryFee === null ? null : subtotal + deliveryFee
 
-  function handleOrderPlaced() {
+  async function placeOrder(chosenParish: string) {
+    let res: Response
+    try {
+      res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // Only what the order needs: the name and address never leave the browser.
+        body: JSON.stringify({
+          parish: chosenParish,
+          lines: liveItems.map(({ slug, sizeId, quantity }) => ({ slug, sizeId, quantity })),
+        }),
+      })
+    } catch {
+      return "We couldn't reach the shop. Check your connection and try again."
+    }
+    const data = await res.json().catch(() => null)
+    if (!res.ok || !data?.id) return data?.error ? `That order didn't go through: ${data.error}.` : "Something went wrong. Please try again."
+
+    const order = data as Order
+    try {
+      sessionStorage.setItem(ORDER_STORAGE_PREFIX + order.id, JSON.stringify(order))
+    } catch {
+      // Storage blocked: the receipt page will say it can't find the order, but the order still went through.
+    }
     setPlacedItems(liveItems)
     clear()
+    router.push(`/order/${order.id}`)
+    return null
   }
 
   return (
@@ -96,7 +122,7 @@ export function CheckoutContent() {
         <h2 className="mb-4 font-display text-2xl text-foreground">
           Delivery details
         </h2>
-        <PaymentForm onParishChange={setParish} onOrderPlaced={handleOrderPlaced} />
+        <PaymentForm onParishChange={setParish} onPlaceOrder={placeOrder} />
       </div>
     </section>
   )
