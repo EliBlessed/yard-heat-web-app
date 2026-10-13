@@ -198,7 +198,7 @@ export const parishDeliveryFees: Record<Parish, number> = {
 }
 
 export function getParishDeliveryFee(parish: string | null | undefined) {
-  if (!parish || !(parish in parishDeliveryFees)) return null
+  if (!parish || !Object.hasOwn(parishDeliveryFees, parish)) return null
   return parishDeliveryFees[parish as Parish]
 }
 

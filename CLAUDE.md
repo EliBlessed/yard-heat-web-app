@@ -18,12 +18,13 @@ Next.js 16 (App Router), React 19, Motion, Tailwind, shadcn/Radix UI, pnpm (`pnp
 ## Commands
 - Build: `pnpm build`
 - Tests: `pnpm test:e2e` (Playwright on `pnpm start -p 3100`, desktop and Pixel 7 phone projects). Build first. Set `PW_CHROMIUM_PATH` if Chromium isn't found.
-- Tests live in `tests/e2e/`: `shop.spec.ts` (shop, cart, checkout, motion, photo sizes) and `agent-readiness.spec.ts` (Markdown versions of pages, 404s, sitemap, robots, llms.txt), `security.spec.ts`, `accessibility.spec.ts` and `motion.spec.ts` (hero video, heat picker switch, card rise-in, reduced motion). All tests must pass before pushing.
+- Tests live in `tests/e2e/`: `shop.spec.ts` (shop, cart, checkout, motion, photo sizes) and `agent-readiness.spec.ts` (Markdown versions of pages, 404s, sitemap, robots, llms.txt), `security.spec.ts`, `orders.spec.ts` (order API and receipt), `accessibility.spec.ts` and `motion.spec.ts` (hero video, heat picker switch, card rise-in, reduced motion). All tests must pass before pushing.
 
 ## Key places
 - `app/`: pages (home, shop, product, cart, checkout, about, contact, privacy), `llms.txt/route.ts`, `robots.ts`, `sitemap.ts`
 - `components/cart-provider.tsx`: the cart, stored only in the visitor's localStorage
 - `components/payment-form.tsx`: the demo checkout form
+- `app/api/orders/route.ts` + `lib/order.ts`: prices a demo order on the server from `lib/product.ts` (browser prices ignored; unknown products, sizes or parishes and bad quantities get a 400). Only items and parish are sent; nothing is stored. The receipt at `/order/[id]` reads the order back from that tab's sessionStorage. Tests: `orders.spec.ts`.
 - `lib/agent-markdown.ts`: Markdown versions of pages for AI agents
 
 ## Hard rules

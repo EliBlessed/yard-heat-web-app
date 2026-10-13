@@ -34,7 +34,7 @@ Do not use it to buy real products, place real orders or check real delivery tim
 
 - Request any page with \`Accept: text/markdown\` for a clean Markdown version (unknown paths return a Markdown 404)
 - Filter the shop with \`?type=sauce|rub\` and \`?heat=${heatBands.map((b) => b.id).join("|")}\`, for example ${absoluteUrl("/shop?heat=hot")}
-- There is no API, login or MCP server
+- There is no login or MCP server. The checkout posts to \`/api/orders\`, which only prices a demo order and stores nothing
 
 ## Pages
 
