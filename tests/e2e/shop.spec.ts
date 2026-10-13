@@ -260,6 +260,20 @@ test("on a phone, a buy bar stays on screen while the main buttons are out of vi
   await expect(page.getByRole("dialog", { name: "Added to your cart" })).toBeVisible()
 })
 
+test("leaving a product page works when an extension has patched scrollTo", async ({ page }) => {
+  // Some browser extensions wrap window.scrollTo and return a value; an effect that passes that value
+  // back to React makes it crash with "is not a function" when the page unmounts.
+  await page.addInitScript(() => {
+    const original = window.scrollTo.bind(window) as (...args: unknown[]) => void
+    window.scrollTo = ((...args: unknown[]) => (original(...args), Promise.resolve())) as unknown as typeof window.scrollTo
+  })
+  const errors = trackErrors(page)
+  await page.goto("/product/escovitch")
+  await page.getByRole("banner").getByRole("link", { name: "Shop", exact: true }).click()
+  await expect(page.getByRole("heading", { level: 1, name: "Shop" })).toBeVisible()
+  expect(errors).toEqual([])
+})
+
 test("opening a product from the shop runs a view transition", async ({ page }) => {
   await page.goto("/shop")
   // Count view transitions the browser is asked to run.
