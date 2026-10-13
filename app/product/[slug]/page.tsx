@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ProductDetail } from "@/components/product-detail"
 import { ProductCard } from "@/components/product-card"
-import { getHeatBand, getProduct, products } from "@/lib/product"
+import { getCategory, getHeatBand, getProduct, heatBands, products } from "@/lib/product"
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }))
@@ -29,7 +29,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   if (!product) notFound()
 
   const band = getHeatBand(product.heatLevel)
-  const related = products.filter((p) => p.slug !== product.slug && band.matches(p.heatLevel)).slice(0, 3)
+  // Two more at the same heat, plus one of the same type from the next heat (one step down from Hot),
+  // so the row of three is always full.
+  const sameHeat = products.filter((p) => p.slug !== product.slug && band.matches(p.heatLevel)).slice(0, 2)
+  const bandIndex = heatBands.findIndex((b) => b.id === band.id)
+  const nextBand = heatBands[bandIndex === heatBands.length - 1 ? bandIndex - 1 : bandIndex + 1]
+  const nextHeat = products.find(
+    (p) => nextBand.matches(p.heatLevel) && getCategory(p) === getCategory(product) && !sameHeat.includes(p),
+  )
+  const related = nextHeat ? [...sameHeat, nextHeat] : sameHeat
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -47,7 +55,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         {related.length > 0 && (
           <section className="mt-20">
             <h2 className="font-display mb-6 text-3xl leading-none tracking-tight text-foreground">
-              More at {band.name.toLowerCase()} heat
+              You might also like
             </h2>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (

@@ -58,7 +58,7 @@ function shop(): MarkdownPage {
   return page([
     "# Shop: all Yard Heat products",
     demoNote,
-    "Four pepper sauces and two dry rubs, all built on Jamaican Scotch bonnet. Prices are in Jamaican dollars (JMD).",
+    "Six pepper sauces and three dry rubs, all built on Jamaican Scotch bonnet. Prices are in Jamaican dollars (JMD).",
     "## Pepper sauces",
     products.filter((p) => getCategory(p) === "sauce").map(productLine).join("\n"),
     "## Spice rubs",
@@ -86,7 +86,7 @@ function about(): MarkdownPage {
   return page([
     "# About Yard Heat",
     demoNote,
-    `Yard Heat is a portfolio project by Elijah Johnson: a working demo of an online shop for a fictional Jamaican pepper sauce brand. It started as a NextWork guided project and grew into a six-product shop with a cart, delivery fees by parish, motion, and automated Playwright tests. The original version is still online at ${ORIGINAL_SITE_URL}.`,
+    `Yard Heat is a portfolio project by Elijah Johnson: a working demo of an online shop for a fictional Jamaican pepper sauce brand. It started as a NextWork guided project and grew into a nine-product shop with a cart, delivery fees by parish, motion, and automated Playwright tests. The original version is still online at ${ORIGINAL_SITE_URL}.`,
     `Source code: ${SOURCE_URL}`,
     footer,
   ])

@@ -18,7 +18,7 @@ export default function AboutPage() {
       <section>
         <h2 className="font-display text-2xl leading-tight tracking-tight">What it is</h2>
         <p>
-          The shop sells six products built on Jamaican Scotch bonnet: four pepper sauces and two dry rubs. Each one
+          The shop sells nine products built on Jamaican Scotch bonnet: six pepper sauces and three dry rubs, three at each heat level. Each one
           has a heat rating out of five, sizes and prices in Jamaican dollars, and serving ideas. You can filter by
           type and heat, add items to a cart, and try a demo checkout where delivery is priced by parish, from
           Kingston to Hanover.

@@ -39,7 +39,7 @@ Do not use it to buy real products, place real orders or check real delivery tim
 ## Pages
 
 - [Home](${absoluteUrl("/")}): the brand, heat picker and how the sauces are made
-- [Shop](${absoluteUrl("/shop")}): all six products with filters
+- [Shop](${absoluteUrl("/shop")}): all nine products with filters
 - [About](${absoluteUrl("/about")}): what this project is and who built it
 - [Contact](${absoluteUrl("/contact")}): how to reach the developer
 - [Privacy](${absoluteUrl("/privacy")}): what the site stores (only the cart, in your browser)

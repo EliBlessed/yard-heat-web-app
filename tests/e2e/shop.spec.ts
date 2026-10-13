@@ -34,35 +34,47 @@ test("home page loads with hero, heat picker and working links", async ({ page }
   await expect(page.getByRole("heading", { level: 1, name: "Real yard heat, bottled bold." })).toBeVisible()
   await expect(page.getByAltText(/Bottle of Yard Heat pepper sauce/)).toBeVisible()
 
-  // Heat picker: medium is selected by default and shows 2 products.
+  // Heat picker: medium is selected by default, and every heat level fills a row of 3.
   const heat = page.getByRole("radiogroup", { name: "Heat level" })
   await expect(heat.getByRole("radio", { name: /Medium/ })).toHaveAttribute("aria-checked", "true")
-  await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(2)
+  await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(3)
+  await expect(page.locator("#heat").getByText("Escovitch Pepper Sauce")).toBeVisible()
+
+  await heat.getByRole("radio", { name: /Gentle/ }).click()
+  await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(3)
+  await expect(page.locator("#heat").getByText("Pineapple Ginger Pepper Sauce")).toBeVisible()
 
   await heat.getByRole("radio", { name: /Hot/ }).click()
-  await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(2)
+  await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(3)
   await expect(page.locator("#heat").getByText("Fire-Roasted Scotch Bonnet Sauce")).toBeVisible()
+  await expect(page.locator("#heat").getByText("Scotch Bonnet Fire Rub")).toBeVisible()
 
   await page.getByRole("link", { name: "See every hot product in the shop" }).click()
   await expect(page).toHaveURL(/\/shop\?heat=hot/)
-  await expect(page.getByTestId("product-card")).toHaveCount(2)
+  await expect(page.getByTestId("product-card")).toHaveCount(3)
   expect(errors).toEqual([])
 })
 
-test("shop lists all six products and filters by type and heat", async ({ page }) => {
+test("shop lists all nine products and filters by type and heat", async ({ page }) => {
   const errors = trackErrors(page)
   await page.goto("/shop")
+  await expect(page.getByTestId("product-card")).toHaveCount(9)
+  await expect(page.getByText("Showing 9 of 9 products")).toBeVisible()
+
+  await page.getByRole("radiogroup", { name: "Product type" }).getByRole("radio", { name: "Pepper sauces" }).click()
+  await expect(page).toHaveURL(/type=sauce/)
   await expect(page.getByTestId("product-card")).toHaveCount(6)
-  await expect(page.getByText("Showing 6 of 6 products")).toBeVisible()
 
   await page.getByRole("radiogroup", { name: "Product type" }).getByRole("radio", { name: "Spice rubs" }).click()
   await expect(page).toHaveURL(/type=rub/)
-  await expect(page.getByTestId("product-card")).toHaveCount(2)
+  await expect(page.getByTestId("product-card")).toHaveCount(3)
 
   await page.getByRole("radiogroup", { name: "Heat level" }).getByRole("radio", { name: "Hot" }).click()
-  await expect(page.getByText("Nothing matches both filters yet.")).toBeVisible()
-  await page.getByRole("button", { name: "Clear filters" }).click()
-  await expect(page.getByTestId("product-card")).toHaveCount(6)
+  await expect(page.getByTestId("product-card")).toHaveCount(1)
+  await expect(page.getByTestId("product-card")).toContainText("Scotch Bonnet Fire Rub")
+  await page.getByRole("radiogroup", { name: "Product type" }).getByRole("radio", { name: "Everything" }).click()
+  await page.getByRole("radiogroup", { name: "Heat level" }).getByRole("radio", { name: "Any heat" }).click()
+  await expect(page.getByTestId("product-card")).toHaveCount(9)
   expect(errors).toEqual([])
 })
 
@@ -80,8 +92,20 @@ test("product page: price follows the chosen size and related products show", as
   await page.getByText("500 ml", { exact: true }).click()
   await expect(page.getByTestId("product-price")).toHaveText("J$2,750")
 
-  await expect(page.getByRole("heading", { name: "More at medium heat" })).toBeVisible()
+  // Related row is always full: two more at medium heat plus a hot sauce.
+  const related = page.locator("section").filter({ has: page.getByRole("heading", { name: "You might also like" }) })
+  await expect(related.getByTestId("product-card")).toHaveCount(3)
+  await expect(related).toContainText("Escovitch Pepper Sauce")
+  await expect(related).toContainText("Fire-Roasted Scotch Bonnet Sauce")
   expect(errors).toEqual([])
+})
+
+test("every product page shows a full row of three related products", async ({ request, page }) => {
+  for (const slug of ["pineapple-ginger", "escovitch", "fire-rub", "bbq-rub"]) {
+    await page.goto(`/product/${slug}`)
+    const related = page.locator("section").filter({ has: page.getByRole("heading", { name: "You might also like" }) })
+    await expect(related.getByTestId("product-card")).toHaveCount(3)
+  }
 })
 
 test("unknown product shows a not-found page", async ({ page }) => {

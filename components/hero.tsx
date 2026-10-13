@@ -46,7 +46,7 @@ export function Hero() {
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button size="lg" className="h-12 rounded-full px-7 text-base" nativeButton={false} render={<Link href="/shop" />}>
-              Shop all six
+              Shop all nine
             </Button>
             <Button
               size="lg"

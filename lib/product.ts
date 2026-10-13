@@ -53,6 +53,18 @@ export const products: Product[] = [
     sizes: bottleSizes([1050, 1550, 2750]),
   },
   {
+    slug: "escovitch",
+    name: "Escovitch Pepper Sauce",
+    tagline: TAGLINE,
+    description:
+      "The bright, vinegar-sharp pepper sauce of Jamaican escovitch fish: pickled Scotch bonnet with onion, carrot and pimento. Tangy first, then a steady heat.",
+    heatLevel: 3,
+    maxHeat: 5,
+    image: "/yard-heat-escovitch.webp",
+    sizeHeading: "Bottle size",
+    sizes: bottleSizes([950, 1450, 2600]),
+  },
+  {
     slug: "smoky-jerk",
     name: "Smoky Jerk Pepper Sauce",
     tagline: TAGLINE,
@@ -78,6 +90,18 @@ export const products: Product[] = [
       { id: "250ml", label: "250 ml", volume: "Kitchen bottle", priceJMD: 1650 },
       { id: "500ml", label: "500 ml", volume: "Family bottle", priceJMD: 2900 },
     ],
+  },
+  {
+    slug: "pineapple-ginger",
+    name: "Pineapple Ginger Pepper Sauce",
+    tagline: TAGLINE,
+    description:
+      "Sweet Jamaican pineapple blended with fresh ginger and a light touch of yellow Scotch bonnet. Bright and fruity, with a gentle warmth that builds slowly: the easy way into pepper sauce.",
+    heatLevel: 1,
+    maxHeat: 5,
+    image: "/yard-heat-pineapple-ginger.webp",
+    sizeHeading: "Bottle size",
+    sizes: bottleSizes([1000, 1500, 2700]),
   },
   {
     slug: "jerk-rub",
@@ -107,6 +131,20 @@ export const products: Product[] = [
     sizes: [
       { id: "100g", label: "100 g", volume: "Small jar", priceJMD: 750 },
       { id: "250g", label: "250 g", volume: "Large jar", priceJMD: 1500 },
+    ],
+  },  {
+    slug: "fire-rub",
+    name: "Scotch Bonnet Fire Rub",
+    tagline: TAGLINE,
+    description:
+      "Our hottest product: dried Scotch bonnet ground with pimento, garlic and smoked salt. A little goes a long way on wings, pork and anything headed for the coals.",
+    heatLevel: 5,
+    maxHeat: 5,
+    image: "/yard-heat-fire-rub.webp",
+    sizeHeading: "Jar size",
+    sizes: [
+      { id: "100g", label: "100 g", volume: "Small jar", priceJMD: 900 },
+      { id: "250g", label: "250 g", volume: "Large jar", priceJMD: 1800 },
     ],
   },
 ]
@@ -215,7 +253,7 @@ export const servingIdeas: Record<string, string[]> = {
     "Mixed with mayonnaise for a fiery sandwich spread",
   ],
   "mango-scotch-bonnet": [
-    "Spooned over grilled or escoveitch fish",
+    "Spooned over grilled or escovitch fish",
     "As a dip for fried chicken or festival",
     "Brushed on prawns in the last minute on the grill",
   ],
@@ -233,6 +271,21 @@ export const servingIdeas: Record<string, string[]> = {
     "Rubbed into chicken or pork and left overnight",
     "Sprinkled on roast potatoes or sweet potato wedges",
     "Mixed with oil and lime for a quick fish seasoning",
+  ],
+  "pineapple-ginger": [
+    "Drizzled over grilled pork chops or jerk pork",
+    "As a dipping sauce for shrimp or fish fritters",
+    "Stirred into fried rice just before serving",
+  ],
+  escovitch: [
+    "Poured over fried fish with sliced onion and carrot",
+    "Splashed on fried dumplings, bammy or festival",
+    "Mixed into coleslaw for a sharp, spicy crunch",
+  ],
+  "fire-rub": [
+    "Rubbed into chicken wings an hour before frying or grilling",
+    "A pinch in soup or stew for a slow-building heat",
+    "Mixed with butter and brushed on roast corn",
   ],
   "bbq-rub": [
     "Rubbed on ribs or chicken before grilling",

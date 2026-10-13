@@ -20,7 +20,7 @@ export default function ShopPage() {
         <div className="mb-8 flex flex-col gap-3">
           <h1 className="font-display text-5xl leading-none tracking-tight text-foreground sm:text-6xl">Shop</h1>
           <p className="max-w-xl text-base text-muted-foreground">
-            Four pepper sauces and two dry rubs, all built on Jamaican Scotch bonnet.
+            Six pepper sauces and three dry rubs, all built on Jamaican Scotch bonnet.
           </p>
         </div>
         <Suspense
