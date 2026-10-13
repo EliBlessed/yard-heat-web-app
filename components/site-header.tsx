@@ -14,18 +14,18 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Yard Heat home">
-          <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <span className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <FlameMark className="size-8" />
           </span>
           <span className="font-display text-xl tracking-tight text-foreground">Yard Heat</span>
         </Link>
         <nav aria-label="Main" className="flex items-center gap-1 text-sm font-semibold text-foreground/85 sm:gap-2">
-          <Link href="/shop" className="rounded-full px-3 py-2 transition-colors hover:bg-muted hover:text-foreground">
+          <Link href="/shop" className="rounded-full px-3 py-2.5 transition-colors hover:bg-muted hover:text-foreground">
             Shop
           </Link>
           <Link
             href="/#heat"
-            className="hidden rounded-full px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block"
+            className="hidden rounded-full px-3 py-2.5 transition-colors hover:bg-muted hover:text-foreground sm:block"
           >
             Find your heat
           </Link>

@@ -45,7 +45,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <main id="main" className="mx-auto w-full max-w-6xl px-5 pt-6 pb-16 sm:px-8">
         <Link
           href="/shop"
-          className="mb-6 inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground"
+          className="mb-6 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground"
         >
           <ChevronLeft className="size-4" aria-hidden="true" />
           Back to shop
@@ -58,8 +58,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               You might also like
             </h2>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {related.map((p) => (
-                <ProductCard key={p.slug} product={p} />
+              {related.map((p, i) => (
+                <ProductCard key={p.slug} product={p} index={i} />
               ))}
             </div>
           </section>
