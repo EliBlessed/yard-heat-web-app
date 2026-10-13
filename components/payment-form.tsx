@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { parishes } from "@/lib/product"
+import { FlameBurst } from "@/components/flame-burst"
 
 export function PaymentForm({
   onParishChange,
@@ -28,7 +29,10 @@ export function PaymentForm({
   if (submitted) {
     return (
       <div className="flex h-full min-h-64 flex-col items-center justify-center gap-3 text-center">
-        <CheckCircle2 className="size-10 text-primary" />
+        <span className="relative flex size-16 items-center justify-center">
+          <FlameBurst />
+          <CheckCircle2 className="size-10 text-primary" />
+        </span>
         <p className="font-display text-xl text-foreground">Demo order placed</p>
         <p className="max-w-xs text-sm text-muted-foreground">
           No payment was taken and nothing will be shipped. Thanks for trying the shop.

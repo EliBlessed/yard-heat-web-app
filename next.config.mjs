@@ -27,6 +27,10 @@ const securityHeaders = [
 const nextConfig = {
   // Development only: lets a phone on the local network load the dev server's scripts.
   allowedDevOrigins: ['192.168.0.16'],
+  experimental: {
+    // Lets <ViewTransition> morph a product photo from its card into the product page.
+    viewTransition: true,
+  },
   images: {
     // Photos are pre-compressed to WebP in /public, so they are served as-is.
     unoptimized: true,
