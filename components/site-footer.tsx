@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="flex flex-col gap-3">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <span className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
               <FlameMark className="size-8" />
             </span>
             <span className="font-display text-xl">Yard Heat</span>
@@ -16,15 +16,15 @@ export function SiteFooter() {
             Small-batch pepper sauces and spice rubs, cooked and bottled in Kingston with Jamaican Scotch bonnets.
           </p>
         </div>
-        <div className="flex flex-col gap-2 text-sm">
-          <p className="font-semibold">Shop</p>
-          <Link href="/shop?type=sauce" className="text-background/70 hover:text-background">
+        <div className="flex flex-col items-start text-sm">
+          <p className="mb-1 font-semibold">Shop</p>
+          <Link href="/shop?type=sauce" className="inline-flex min-h-10 items-center text-background/70 hover:text-background">
             Pepper sauces
           </Link>
-          <Link href="/shop?type=rub" className="text-background/70 hover:text-background">
+          <Link href="/shop?type=rub" className="inline-flex min-h-10 items-center text-background/70 hover:text-background">
             Spice rubs
           </Link>
-          <Link href="/cart" className="text-background/70 hover:text-background">
+          <Link href="/cart" className="inline-flex min-h-10 items-center text-background/70 hover:text-background">
             Your cart
           </Link>
         </div>
@@ -34,14 +34,14 @@ export function SiteFooter() {
             Yard Heat is a fictional brand. This is a demo shop: no payments are taken and no orders are shipped.
           </p>
           <p className="text-background/70">Started from a NextWork guided project.</p>
-          <p className="flex flex-wrap gap-x-4 gap-y-1">
-            <Link href="/about" className="text-background/70 hover:text-background">
+          <p className="flex flex-wrap gap-x-4">
+            <Link href="/about" className="inline-flex min-h-10 items-center text-background/70 hover:text-background">
               About
             </Link>
-            <Link href="/contact" className="text-background/70 hover:text-background">
+            <Link href="/contact" className="inline-flex min-h-10 items-center text-background/70 hover:text-background">
               Contact
             </Link>
-            <Link href="/privacy" className="text-background/70 hover:text-background">
+            <Link href="/privacy" className="inline-flex min-h-10 items-center text-background/70 hover:text-background">
               Privacy
             </Link>
           </p>

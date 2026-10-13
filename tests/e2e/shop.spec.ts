@@ -9,7 +9,9 @@ function trackErrors(page: Page) {
   page.on("pageerror", (err) => errors.push(err.message))
   page.on("console", (msg) => {
     // Failed requests are checked below, where the URL is known.
-    if (msg.type() === "error" && !msg.text().startsWith("Failed to load resource")) errors.push(msg.text())
+    // With nosniff, the browser also refuses the local 404 for Vercel's analytics script: same Vercel-only gap.
+    if (msg.type() === "error" && !msg.text().startsWith("Failed to load resource") && !isVercelOnly(msg.text()))
+      errors.push(msg.text())
   })
   page.on("response", (res) => {
     if (res.status() >= 400 && !isVercelOnly(res.url())) errors.push(`${res.status()} ${res.url()}`)

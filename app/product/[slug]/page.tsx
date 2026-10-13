@@ -45,7 +45,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <main id="main" className="mx-auto w-full max-w-6xl px-5 pt-6 pb-16 sm:px-8">
         <Link
           href="/shop"
-          className="mb-6 inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground"
+          className="mb-6 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground"
         >
           <ChevronLeft className="size-4" aria-hidden="true" />
           Back to shop

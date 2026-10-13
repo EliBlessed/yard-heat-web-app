@@ -42,7 +42,7 @@ function FilterGroup<T extends string>({
             aria-checked={selected}
             onClick={() => onChange(option.id)}
             className={cn(
-              "rounded-full px-4 py-2 text-sm font-semibold ring-1 transition-colors",
+              "rounded-full px-4 py-2.5 text-sm font-semibold ring-1 transition-colors",
               selected
                 ? "bg-foreground text-background ring-foreground"
                 : "bg-card text-foreground ring-border hover:ring-foreground/40",
@@ -97,7 +97,7 @@ export function ShopBrowser() {
           <button
             type="button"
             onClick={() => update({ type: "all", heat: "all" })}
-            className="text-sm font-semibold text-primary underline underline-offset-4"
+            className="inline-flex min-h-10 items-center text-sm font-semibold text-primary underline underline-offset-4"
           >
             Clear filters
           </button>
