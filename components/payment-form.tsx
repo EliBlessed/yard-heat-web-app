@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { parishes } from "@/lib/product"
+import { PARISH_STORAGE_KEY, parishes } from "@/lib/product"
 
 export function PaymentForm({
   onParishChange,
@@ -18,6 +18,18 @@ export function PaymentForm({
   const [placing, setPlacing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [parish, setParish] = useState<string | null>(null)
+
+  // Start with the parish picked on the home page map, if there is one.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(PARISH_STORAGE_KEY)
+      if (saved && (parishes as readonly string[]).includes(saved)) {
+        setParish(saved)
+        onParishChange?.(saved)
+      }
+    } catch {}
+    // Only once, on arrival: later changes come from the select itself.
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

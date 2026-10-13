@@ -18,7 +18,8 @@ export default function PrivacyPage() {
         <p>
           The items you add are saved in your browser&rsquo;s local storage, so your cart is still there when you
           come back. It stays on your device until you place a demo order. Clearing your browser data, or
-          placing a demo order, empties it.
+          placing a demo order, empties it. If you pick a parish on the home page map, that is saved the same way so
+          the checkout can fill it in.
         </p>
       </section>
       <section>

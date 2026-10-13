@@ -1,16 +1,14 @@
-import Link from "next/link"
 import type { Metadata } from "next"
 import { JsonLd } from "@/components/json-ld"
 import { homeStructuredData } from "@/lib/structured-data"
-import { Button } from "@/components/ui/button"
 import { SiteHeader, FlameMark } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { HeatPicker } from "@/components/heat-picker"
+import { ParishMap } from "@/components/parish-map"
 import { Marquee } from "@/components/magicui/marquee"
 import { Hero } from "@/components/hero"
 import { ProcessSteps } from "@/components/process-steps"
 import { HomeFaq } from "@/components/home-faq"
-import { formatJMD, getLowestDeliveryFee, parishes } from "@/lib/product"
 
 const ingredients = [
   "Scotch bonnet",
@@ -73,25 +71,7 @@ export default function HomePage() {
         <HomeFaq />
 
         <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-20">
-          <div className="flex flex-col items-start justify-between gap-6 rounded-[2rem] bg-scallion px-7 py-10 text-scallion-foreground md:flex-row md:items-center md:px-12">
-            <div className="flex flex-col gap-2">
-              <h2 className="font-display text-3xl leading-tight sm:text-4xl">
-                Delivered to all {parishes.length} parishes
-              </h2>
-              <p className="max-w-md text-scallion-foreground/80">
-                Delivery starts at {formatJMD(getLowestDeliveryFee())} in Kingston, St. Andrew and St. Catherine. Pick
-                your parish at checkout to see the exact cost.
-              </p>
-            </div>
-            <Button
-              size="lg"
-              className="h-12 rounded-full bg-scallion-foreground px-7 text-base text-scallion hover:bg-white"
-              nativeButton={false}
-              render={<Link href="/shop" />}
-            >
-              Start shopping
-            </Button>
-          </div>
+          <ParishMap />
         </section>
       </main>
 

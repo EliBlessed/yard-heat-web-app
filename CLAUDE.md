@@ -26,6 +26,8 @@ Next.js 16 (App Router), React 19, Motion, Tailwind, shadcn/Radix UI, pnpm (`pnp
 - `components/payment-form.tsx`: the demo checkout form
 - `app/api/orders/route.ts` + `lib/order.ts`: prices a demo order on the server from `lib/product.ts` (browser prices ignored; unknown products, sizes or parishes and bad quantities get a 400). Only items and parish are sent; nothing is stored. The receipt at `/order/[id]` reads the order back from that tab's sessionStorage. Tests: `orders.spec.ts`.
 - `lib/agent-markdown.ts`: Markdown versions of pages for AI agents
+- `lib/parish-map.ts`: parish outlines from Natural Earth (public domain), generated once for `components/parish-map.tsx`. The parish picked there is saved as `yard-heat-parish` in localStorage and pre-fills checkout.
+- `components/process-steps.tsx`: the fire-to-bottle scroll story (photos `public/yard-heat-process-*.webp`, made by Eli in Gemini)
 
 ## Hard rules
 - British English in all site copy. No fake reviews, ratings or customer quotes presented as real.

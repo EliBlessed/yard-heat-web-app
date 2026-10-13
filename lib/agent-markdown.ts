@@ -107,7 +107,7 @@ function privacy(): MarkdownPage {
   return page([
     "# Privacy",
     demoNote,
-    "- **Cart:** stored only in your own browser (localStorage) until a demo order is placed.",
+    "- **Cart:** stored only in your own browser (localStorage) until a demo order is placed, along with the parish if you pick one on the home page map.",
     "- **Checkout:** placing a demo order sends only the items and parish to the shop, which checks the prices and returns an order number. Nothing is stored on the server; the name and address never leave the browser. No payment details are asked for.",
     "- **Analytics:** Vercel Web Analytics counts page views without cookies.",
     "- **No accounts, no marketing emails, no data sold or shared.**",

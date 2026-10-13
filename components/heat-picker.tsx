@@ -2,83 +2,104 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { Flame } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { ProductCard, productRow, productRowItem } from "@/components/product-card"
-import { heatBands, products, type HeatBand } from "@/lib/product"
+import { getHeatBand, products } from "@/lib/product"
 import { cn } from "@/lib/utils"
 
-const bandStyles: Record<HeatBand["id"], { idle: string; active: string }> = {
-  gentle: { idle: "bg-scallion/10 text-scallion", active: "bg-scallion text-scallion-foreground" },
-  medium: { idle: "bg-secondary/15 text-[#9a4511]", active: "bg-secondary text-secondary-foreground" },
-  hot: { idle: "bg-primary/10 text-primary", active: "bg-primary text-primary-foreground" },
+const MAX_HEAT = 5
+const ROW = 3
+
+/** The three products nearest the chosen heat; ties go towards the milder side below medium and the hotter side above. */
+function nearest(level: number) {
+  const towardsHot = level >= 3
+  return [...products]
+    .sort((a, b) => {
+      const gap = Math.abs(a.heatLevel - level) - Math.abs(b.heatLevel - level)
+      return gap || (towardsHot ? b.heatLevel - a.heatLevel : a.heatLevel - b.heatLevel)
+    })
+    .slice(0, ROW)
 }
 
 export function HeatPicker() {
-  const [bandId, setBandId] = useState<HeatBand["id"]>("medium")
-  const band = heatBands.find((b) => b.id === bandId) ?? heatBands[1]
-  const matches = products.filter((p) => band.matches(p.heatLevel))
+  const [level, setLevel] = useState(3)
+  const band = getHeatBand(level)
+  const matches = nearest(level)
   const still = useReducedMotion()
 
   return (
-    <div className="flex flex-col gap-8">
-      <div
-        role="radiogroup"
-        aria-label="Heat level"
-        className="grid grid-cols-3 gap-1.5 rounded-full bg-card p-1.5 ring-1 ring-border"
-      >
-        {heatBands.map((b) => {
-          const selected = b.id === bandId
-          const count = products.filter((p) => b.matches(p.heatLevel)).length
-          return (
-            <button
-              key={b.id}
-              type="button"
-              role="radio"
-              aria-checked={selected}
-              onClick={() => setBandId(b.id)}
-              className={cn(
-                "relative flex flex-col items-center justify-center rounded-full px-3 py-3 transition-colors sm:flex-row sm:gap-2",
-                // With motion on, the sliding pill below paints the selected background.
-                selected
-                  ? cn(bandStyles[b.id].active, !still && "bg-transparent")
-                  : cn(bandStyles[b.id].idle, "hover:brightness-95"),
-              )}
-            >
-              {selected && !still && (
-                // The coloured pill slides across to the chosen heat.
-                <motion.span
-                  layoutId="heat-pill"
-                  className={cn("absolute inset-0 rounded-full", bandStyles[b.id].active)}
-                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                />
-              )}
-              <span className="relative font-display text-base sm:text-lg">{b.name}</span>
-              <span className="relative text-xs font-semibold">
-                {count} {count === 1 ? "product" : "products"}
-              </span>
-            </button>
-          )
-        })}
+    <div
+      data-testid="heat-panel"
+      className="flex flex-col gap-8 rounded-[2rem] p-5 ring-1 ring-border transition-[background-color] duration-300 ease-out sm:p-8"
+      // The panel warms from cream towards ember as the heat goes up.
+      style={{ backgroundColor: `color-mix(in oklab, var(--card), var(--primary) ${(level - 1) * 4}%)` }}
+    >
+      <div className="flex flex-col gap-5">
+        <div className="flex items-end justify-between gap-4">
+          <div aria-hidden="true" className="flex items-end gap-1 sm:gap-2">
+            {Array.from({ length: MAX_HEAT }, (_, i) => {
+              const lit = i < level
+              return (
+                <span
+                  key={i}
+                  className="flex origin-bottom transition-transform duration-300 ease-out"
+                  style={{ transform: `scale(${lit ? 0.8 + i * 0.12 : 0.7})` }}
+                >
+                  <Flame
+                    className={cn(
+                      "size-7 origin-bottom transition-colors duration-300 sm:size-9",
+                      lit ? "fill-primary text-primary" : "fill-transparent text-muted-foreground/40",
+                      lit && "heat-flicker", // CSS stops the flicker for reduced motion
+                    )}
+                    style={{ animationDelay: `${i * -0.37}s` }}
+                  />
+                </span>
+              )
+            })}
+          </div>
+          <p className="text-right font-display text-2xl text-foreground sm:text-3xl">
+            {band.name}
+            <span className="block text-sm font-sans font-semibold text-muted-foreground">
+              {level} of {MAX_HEAT} flames
+            </span>
+          </p>
+        </div>
+
+        <input
+          type="range"
+          min={1}
+          max={MAX_HEAT}
+          step={1}
+          value={level}
+          onChange={(e) => setLevel(Number(e.target.value))}
+          aria-label="Heat level"
+          aria-valuetext={`${level} of ${MAX_HEAT} flames, ${band.name}`}
+          className="heat-slider h-10 w-full cursor-pointer"
+        />
       </div>
 
       <p aria-live="polite" className="max-w-xl text-base text-muted-foreground">
         {band.description}
       </p>
 
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={band.id}
-          className={productRow}
-          initial={still ? false : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={still ? undefined : { opacity: 0, y: -12 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-        >
+      <div className={productRow}>
+        <AnimatePresence mode="popLayout" initial={false}>
           {matches.map((product, i) => (
-            <ProductCard key={product.slug} product={product} index={i} className={productRowItem} />
+            <motion.div
+              key={product.slug}
+              layout={!still}
+              className={productRowItem}
+              initial={still ? false : { opacity: 0, transform: "translateY(16px) scale(0.96)" }}
+              animate={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
+              exit={still ? undefined : { opacity: 0, transform: "translateY(-12px) scale(0.96)" }}
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <ProductCard product={product} index={i} className="flex w-full" />
+            </motion.div>
           ))}
-        </motion.div>
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
 
       <Link
         href={`/shop?heat=${band.id}`}

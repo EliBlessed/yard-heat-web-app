@@ -36,17 +36,17 @@ test("home page loads with hero, heat picker and working links", async ({ page }
   await expect(page.getByRole("heading", { level: 1, name: "Real yard heat, bottled bold." })).toBeVisible()
   await expect(page.getByAltText(/Bottle of Yard Heat pepper sauce/)).toBeVisible()
 
-  // Heat picker: medium is selected by default, and every heat level fills a row of 3.
-  const heat = page.getByRole("radiogroup", { name: "Heat level" })
-  await expect(heat.getByRole("radio", { name: /Medium/ })).toHaveAttribute("aria-checked", "true")
+  // Heat slider: medium (3 of 5) by default, and every level fills a row of 3.
+  const heat = page.getByRole("slider", { name: "Heat level" })
+  await expect(heat).toHaveValue("3")
   await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(3)
   await expect(page.locator("#heat").getByText("Escovitch Pepper Sauce")).toBeVisible()
 
-  await heat.getByRole("radio", { name: /Gentle/ }).click()
+  await heat.fill("1")
   await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(3)
   await expect(page.locator("#heat").getByText("Pineapple Ginger Pepper Sauce")).toBeVisible()
 
-  await heat.getByRole("radio", { name: /Hot/ }).click()
+  await heat.fill("5")
   await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(3)
   await expect(page.locator("#heat").getByText("Fire-Roasted Scotch Bonnet Sauce")).toBeVisible()
   await expect(page.locator("#heat").getByText("Scotch Bonnet Fire Rub")).toBeVisible()
@@ -193,6 +193,29 @@ test("checkout: parish delivery fee, demo order, cart empties", async ({ page })
   await expect(page.getByText(/No payment was taken/)).toBeVisible()
   await expect(page.getByRole("button", { name: "Keep shopping" })).toHaveAttribute("href", "/shop")
   await expect(page.getByRole("link", { name: "Cart", exact: true })).toBeVisible()
+  expect(errors).toEqual([])
+})
+
+test("the parish map shows each fee and fills the parish in at checkout", async ({ page }) => {
+  const errors = trackErrors(page)
+  await page.goto("/")
+  const fees = page.getByTestId("parish-fees")
+  await expect(fees.getByRole("button")).toHaveCount(14)
+  await expect(fees.getByRole("list", { name: "J$3,500 delivery" }).getByRole("button")).toHaveText(["Westmoreland", "Hanover"])
+  await expect(page.locator("svg path[data-parish]")).toHaveCount(14)
+
+  await fees.getByRole("button", { name: /Westmoreland/ }).click()
+  await expect(fees.getByRole("button", { name: /Westmoreland/ })).toHaveAttribute("aria-pressed", "true")
+  await expect(page.getByText("We'll fill this in for you at checkout.")).toBeVisible()
+
+  // Clicking the map itself picks a parish too.
+  await page.locator('svg path[data-parish="St. Ann"]').click()
+  await expect(fees.getByRole("button", { name: /St\. Ann/ })).toHaveAttribute("aria-pressed", "true")
+
+  await page.goto("/product/escovitch")
+  await page.getByRole("button", { name: /Buy Now/ }).click()
+  await expect(page.locator("#parish")).toContainText("St. Ann")
+  await expect(page.getByText("J$1,500", { exact: true })).toBeVisible()
   expect(errors).toEqual([])
 })
 
