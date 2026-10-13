@@ -58,8 +58,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               You might also like
             </h2>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {related.map((p) => (
-                <ProductCard key={p.slug} product={p} />
+              {related.map((p, i) => (
+                <ProductCard key={p.slug} product={p} index={i} />
               ))}
             </div>
           </section>

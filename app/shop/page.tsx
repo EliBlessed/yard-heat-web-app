@@ -31,7 +31,7 @@ export default function ShopPage() {
               <p className="text-sm text-muted-foreground">Showing {products.length} of {products.length} products</p>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {products.map((product, i) => (
-                  <ProductCard key={product.slug} product={product} priority={i < 3} headingLevel={2} />
+                  <ProductCard key={product.slug} product={product} priority={i < 3} headingLevel={2} index={i} />
                 ))}
               </div>
             </div>

@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { motion, useReducedMotion } from "motion/react"
@@ -10,12 +11,32 @@ const ease = [0.22, 1, 0.36, 1] as const
 const headline = ["Real yard heat,", "bottled bold."]
 
 /**
+ * The slow-motion hero loop plays only on wider screens, with motion allowed and Data Saver off.
+ * Phones and reduced-motion visitors keep the still photo, so they never download the video.
+ */
+function useHeroVideo(still: boolean | null) {
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    if (still) return setShow(false)
+    const wide = window.matchMedia("(min-width: 768px)")
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData
+    const update = () => setShow(wide.matches && !saveData)
+    update()
+    wide.addEventListener("change", update)
+    return () => wide.removeEventListener("change", update)
+  }, [still])
+  return show
+}
+
+/**
  * The opening moment: the red arch rises like sauce filling a bottle, the photo settles in,
  * and the headline lines slide up from behind their baseline. Plays once, on load.
  */
 export function Hero() {
   const still = useReducedMotion()
   const t = (delay: number, duration = 0.8) => (still ? { duration: 0 } : { delay, duration, ease })
+  const showVideo = useHeroVideo(still)
+  const [playing, setPlaying] = useState(false)
 
   return (
     <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-5 pt-10 pb-14 sm:px-8 md:grid-cols-[1.15fr_1fr] md:pt-16 md:pb-20">
@@ -61,10 +82,10 @@ export function Hero() {
         </motion.div>
       </div>
 
-      <div className="relative mx-auto w-full max-w-sm md:max-w-md">
+      <div className="relative mx-auto w-full max-w-sm">
         <motion.div
           data-testid="hero-arch"
-          className="relative aspect-[4/5] w-full overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-primary shadow-[0_30px_60px_-30px_rgb(122_16_22/0.6)]"
+          className="relative aspect-[4/5] w-full md:aspect-[2/3] overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-primary shadow-[0_30px_60px_-30px_rgb(122_16_22/0.6)]"
           initial={still ? false : { clipPath: "inset(100% 0% 0% 0% round 12rem 12rem 2rem 2rem)" }}
           animate={{ clipPath: "inset(0% 0% 0% 0% round 12rem 12rem 2rem 2rem)" }}
           transition={t(0, 1.1)}
@@ -79,10 +100,28 @@ export function Hero() {
               src="/yard-heat-hero.webp"
               alt="Bottle of Yard Heat pepper sauce surrounded by fresh Scotch bonnet peppers"
               fill
-              sizes="(min-width: 768px) 28rem, 90vw"
+              sizes="(min-width: 768px) 24rem, 90vw"
               className="object-cover"
               priority
             />
+            {showVideo && (
+              // Decorative: the photo underneath carries the alt text. The video fades in once it is playing.
+              <video
+                data-testid="hero-video"
+                aria-hidden="true"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                onPlaying={() => setPlaying(true)}
+                className={`absolute inset-0 size-full object-cover transition-opacity duration-700 ${playing ? "opacity-100" : "opacity-0"}`}
+              >
+                {/* WebM for Chrome, Edge and Firefox; MP4 (H.264) for Safari. The browser fetches only the first it can play. */}
+                <source src="/yard-heat-hero.webm" type='video/webm; codecs="vp9"' />
+                <source src="/yard-heat-hero.mp4" type="video/mp4" />
+              </video>
+            )}
           </motion.div>
         </motion.div>
         <motion.div
