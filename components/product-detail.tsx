@@ -25,7 +25,10 @@ export function ProductDetail({ product }: { product: Product }) {
   const imageRef = useRef<HTMLDivElement>(null)
   // Start at the top before the photo morph takes its "after" picture; otherwise the page arrives
   // at the shop's scroll position and jumps up once the morph ends.
-  useLayoutEffect(() => window.scrollTo(0, 0), [])
+  // Braces matter: some browser extensions make scrollTo return a value, which React would call as a cleanup.
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   const [drawerOpen, setDrawerOpen] = useState(false)
   // The line the drawer shows: what was just added, even if the size or quantity changes afterwards.
   const [added, setAdded] = useState<{ sizeId: string; quantity: number } | null>(null)
