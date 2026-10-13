@@ -39,9 +39,9 @@ export function Hero() {
   const [playing, setPlaying] = useState(false)
 
   return (
-    <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-5 pt-10 pb-14 sm:px-8 md:grid-cols-[1.15fr_1fr] md:pt-16 md:pb-20">
+    <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-5 pt-10 pb-14 sm:px-8 md:grid-cols-[1fr_20rem] lg:grid-cols-[1fr_24rem] md:pt-16 md:pb-20">
       <div className="flex flex-col gap-6">
-        <h1 className="font-display text-[clamp(2.75rem,7vw,5.25rem)] leading-[0.95] tracking-tight text-foreground">
+        <h1 className="font-display text-[clamp(2.5rem,5.2vw,4.75rem)] leading-[0.95] tracking-tight text-foreground">
           {headline.map((line, i) => (
             <span key={line} className="block overflow-hidden pb-[0.06em]">
               <motion.span

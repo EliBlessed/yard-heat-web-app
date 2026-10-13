@@ -36,8 +36,9 @@ Next.js 16 (App Router), React 19, Motion, Tailwind, shadcn/Radix UI, pnpm (`pnp
 - Check any new tool against Eli's Tool & Repo Library rules (Notion) before installing it.
 
 ## Hardening (done October 2026, PR #2)
-- Security headers via `headers()` in `next.config.mjs`: frame-ancestors 'none', X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy. They reach pages, Markdown versions and static files. No script-src rule yet; test hydration before adding one.
+- Security headers via `headers()` in `next.config.mjs`: frame-ancestors 'none', X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy. They reach pages, Markdown versions and static files. The CSP also limits scripts, styles, images, fonts and requests to the site itself ('unsafe-inline' for Next's inline scripts; a nonce would make every page dynamic). Vercel's preview toolbar is blocked by it on preview deploys, which is expected.
 - `proxy.ts` answers malformed percent-escapes (e.g. `/product/%E0%A4%A`) with a 400 instead of a Next.js 500.
 - Accessibility: `@axe-core/playwright` (exact version, dev only) scans every page for zero WCAG 2.2 AA issues, and every button, control and standalone link is at least 40 px. The shared `components/ui` button, input and select sizes are 40 px at the source, so keep new controls on those.
 - Tests: `security.spec.ts` (headers, 400 on bad URLs, checkout details never in the URL) and `accessibility.spec.ts`. Locally, nosniff makes the browser refuse the Vercel analytics 404; the shop tests ignore that Vercel-only error.
+- Share images: `app/product/[slug]/opengraph-image.tsx` draws one per product from the JPEG copies in `public/og/` (the image renderer can't read WebP). Add a JPEG there for any new product.
 - Still to do: update Case Study 5 (Humanizer, photos and videos).

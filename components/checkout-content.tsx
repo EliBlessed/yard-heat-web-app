@@ -48,7 +48,7 @@ export function CheckoutContent() {
             >
               <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl bg-muted">
                 <Image
-                  src={item.product.image || "/placeholder.svg"}
+                  src={item.product.image}
                   alt={item.product.name}
                   fill
                   sizes="80px"

@@ -5,7 +5,7 @@ import { ChevronLeft } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ProductDetail } from "@/components/product-detail"
-import { ProductCard } from "@/components/product-card"
+import { ProductCard, productRow, productRowItem } from "@/components/product-card"
 import { getCategory, getHeatBand, getProduct, heatBands, products } from "@/lib/product"
 
 export function generateStaticParams() {
@@ -57,9 +57,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <h2 className="font-display mb-6 text-3xl leading-none tracking-tight text-foreground">
               You might also like
             </h2>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className={productRow}>
               {related.map((p, i) => (
-                <ProductCard key={p.slug} product={p} index={i} />
+                <ProductCard key={p.slug} product={p} index={i} className={productRowItem} />
               ))}
             </div>
           </section>

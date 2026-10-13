@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { CartLink } from "@/components/cart-link"
+import { NavLink } from "@/components/nav-link"
 
 export function FlameMark({ className = "size-5" }: { className?: string }) {
   return (
@@ -20,9 +21,9 @@ export function SiteHeader() {
           <span className="font-display text-xl tracking-tight text-foreground">Yard Heat</span>
         </Link>
         <nav aria-label="Main" className="flex items-center gap-1 text-sm font-semibold text-foreground/85 sm:gap-2">
-          <Link href="/shop" className="rounded-full px-3 py-2.5 transition-colors hover:bg-muted hover:text-foreground">
+          <NavLink href="/shop" match="/shop">
             Shop
-          </Link>
+          </NavLink>
           <Link
             href="/#heat"
             className="hidden rounded-full px-3 py-2.5 transition-colors hover:bg-muted hover:text-foreground sm:block"

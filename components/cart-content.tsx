@@ -74,7 +74,7 @@ export function CartContent() {
                   onChange={(q) => setQuantity(item.slug, item.sizeId, q)}
                   label={`Quantity for ${item.product.name}, ${item.size.label}`}
                 />
-                <p className="font-display w-24 text-right text-lg text-primary">
+                <p className="font-display ml-auto w-24 text-right text-lg text-primary">
                   {formatJMD(item.lineTotalJMD)}
                 </p>
                 <Button

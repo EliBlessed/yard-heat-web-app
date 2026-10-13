@@ -3,7 +3,6 @@ import { test, expect } from "@playwright/test"
 test.skip(({ isMobile }) => isMobile, "Covered by the desktop run")
 
 const expectedHeaders = {
-  "content-security-policy": "frame-ancestors 'none'",
   "x-frame-options": "DENY",
   "x-content-type-options": "nosniff",
   "referrer-policy": "strict-origin-when-cross-origin",
@@ -22,6 +21,9 @@ test("pages, Markdown versions and files all send the security headers", async (
     const headers = res.headers()
     for (const [name, value] of Object.entries(expectedHeaders)) expect(headers[name], `${name} on ${path}`).toBe(value)
     expect(headers["permissions-policy"], path).toContain("camera=()")
+    // Scripts, styles and requests may only come from this site, and no other site may frame it.
+    for (const rule of ["default-src 'self'", "script-src 'self'", "object-src 'none'", "frame-ancestors 'none'"])
+      expect(headers["content-security-policy"], path).toContain(rule)
   }
 })
 
@@ -43,7 +45,7 @@ test("checkout details never reach the page address that analytics records", asy
   await page.locator("#parish").click()
   await page.getByRole("option", { name: "Kingston", exact: true }).click()
   await page.getByRole("button", { name: "Place demo order" }).click()
-  await expect(page.getByText("Order confirmed!")).toBeVisible()
+  await expect(page.getByText("Demo order placed")).toBeVisible()
   urls.push(page.url())
   for (const url of urls) expect(url).not.toMatch(/Privacy|Secret|name=|address=/i)
 })
