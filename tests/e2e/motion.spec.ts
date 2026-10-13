@@ -55,6 +55,26 @@ test("the heat slider lights flames, warms the panel and reshuffles three produc
   await expect(slider).toHaveValue("4")
 })
 
+test("the fire-to-bottle story swaps the pinned photo as each step scrolls past", async ({ page, isMobile }) => {
+  await page.goto("/")
+  const steps = page.locator("ol[data-active-step] > li")
+  await expect(steps).toHaveCount(3)
+  if (isMobile) {
+    // Phones get each photo with its own step instead of a pinned one.
+    for (const name of ["roast", "simmer", "bottle"]) {
+      const img = steps.locator(`img[src*="process-${name}"]`)
+      await img.scrollIntoViewIfNeeded()
+      await expect(img).toBeVisible()
+    }
+    return
+  }
+  for (const [i, name] of ["roast", "simmer", "bottle"].entries()) {
+    await steps.nth(i).evaluate((el) => el.scrollIntoView({ block: "center" }))
+    await expect(page.locator("ol[data-active-step]")).toHaveAttribute("data-active-step", String(i))
+    await expect(page.getByRole("img", { name: /./ }).and(page.locator(`img[src*="process-${name}"]`))).toBeInViewport()
+  }
+})
+
 test("product cards rise into view and their heat meters fill", async ({ page }) => {
   await page.goto("/shop")
   const cards = page.getByTestId("product-card")

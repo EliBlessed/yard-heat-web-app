@@ -180,6 +180,9 @@ export const parishes = [
 
 export type Parish = (typeof parishes)[number]
 
+/** The parish picked on the home page map, which the checkout fills in. */
+export const PARISH_STORAGE_KEY = "yard-heat-parish"
+
 export const parishDeliveryFees: Record<Parish, number> = {
   Kingston: 400,
   "St. Andrew": 400,

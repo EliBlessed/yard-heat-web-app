@@ -196,6 +196,29 @@ test("checkout: parish delivery fee, demo order, cart empties", async ({ page })
   expect(errors).toEqual([])
 })
 
+test("the parish map shows each fee and fills the parish in at checkout", async ({ page }) => {
+  const errors = trackErrors(page)
+  await page.goto("/")
+  const fees = page.getByTestId("parish-fees")
+  await expect(fees.getByRole("button")).toHaveCount(14)
+  await expect(fees.getByRole("list", { name: "J$3,500 delivery" }).getByRole("button")).toHaveText(["Westmoreland", "Hanover"])
+  await expect(page.locator("svg path[data-parish]")).toHaveCount(14)
+
+  await fees.getByRole("button", { name: /Westmoreland/ }).click()
+  await expect(fees.getByRole("button", { name: /Westmoreland/ })).toHaveAttribute("aria-pressed", "true")
+  await expect(page.getByText("We'll fill this in for you at checkout.")).toBeVisible()
+
+  // Clicking the map itself picks a parish too.
+  await page.locator('svg path[data-parish="St. Ann"]').click()
+  await expect(fees.getByRole("button", { name: /St\. Ann/ })).toHaveAttribute("aria-pressed", "true")
+
+  await page.goto("/product/escovitch")
+  await page.getByRole("button", { name: /Buy Now/ }).click()
+  await expect(page.locator("#parish")).toContainText("St. Ann")
+  await expect(page.getByText("J$1,500", { exact: true })).toBeVisible()
+  expect(errors).toEqual([])
+})
+
 test("empty cart sends checkout back to the cart page", async ({ page }) => {
   await page.goto("/checkout")
   await expect(page).toHaveURL(/\/cart/)
