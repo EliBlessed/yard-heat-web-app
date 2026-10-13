@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
-import { ProductCard } from "@/components/product-card"
+import { ProductCard, productRow, productRowItem } from "@/components/product-card"
 import { heatBands, products, type HeatBand } from "@/lib/product"
 import { cn } from "@/lib/utils"
 
@@ -68,14 +68,14 @@ export function HeatPicker() {
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={band.id}
-          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className={productRow}
           initial={still ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={still ? undefined : { opacity: 0, y: -12 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
         >
           {matches.map((product, i) => (
-            <ProductCard key={product.slug} product={product} index={i} />
+            <ProductCard key={product.slug} product={product} index={i} className={productRowItem} />
           ))}
         </motion.div>
       </AnimatePresence>

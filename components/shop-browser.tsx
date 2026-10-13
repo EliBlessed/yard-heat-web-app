@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { ProductCard } from "@/components/product-card"
+import { ProductCard, productGrid } from "@/components/product-card"
 import { getCategory, heatBands, products, type HeatBand, type ProductCategory } from "@/lib/product"
 import { cn } from "@/lib/utils"
 
@@ -103,7 +103,7 @@ export function ShopBrowser() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={productGrid}>
           {visible.map((product, i) => (
             <ProductCard key={product.slug} product={product} priority={i < 3} headingLevel={2} index={i} />
           ))}

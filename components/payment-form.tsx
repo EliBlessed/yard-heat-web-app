@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,10 +29,13 @@ export function PaymentForm({
     return (
       <div className="flex h-full min-h-64 flex-col items-center justify-center gap-3 text-center">
         <CheckCircle2 className="size-10 text-primary" />
-        <p className="font-display text-xl text-foreground">Order confirmed!</p>
+        <p className="font-display text-xl text-foreground">Demo order placed</p>
         <p className="max-w-xs text-sm text-muted-foreground">
-          This is a demo — no payment was processed and no real order was placed.
+          No payment was taken and nothing will be shipped. Thanks for trying the shop.
         </p>
+        <Button size="lg" className="mt-2 rounded-full px-7 text-base" nativeButton={false} render={<Link href="/shop" />}>
+          Keep shopping
+        </Button>
       </div>
     )
   }

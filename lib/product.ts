@@ -33,7 +33,7 @@ export const products: Product[] = [
     name: "Fire-Roasted Scotch Bonnet Sauce",
     tagline: TAGLINE,
     description:
-      "Fire-roasted Jamaican Scotch bonnet peppers slow-simmered with scallion, allspice and a squeeze of lime. No fillers, no shortcuts — just the real yard-style heat.",
+      "Fire-roasted Jamaican Scotch bonnet peppers slow-simmered with scallion, allspice and a squeeze of lime. No fillers, no shortcuts, just the real yard-style heat.",
     heatLevel: 4,
     maxHeat: 5,
     image: "/yard-heat-bottle-scorpion.webp",

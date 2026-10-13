@@ -49,7 +49,7 @@ export function ProductDetail({ product }: { product: Product }) {
           ref={imageRef}
           className="relative aspect-[4/5] w-full overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-muted shadow-[0_30px_60px_-30px_rgb(122_16_22/0.55)]">
           <Image
-            src={product.image || "/placeholder.svg"}
+            src={product.image}
             alt={`${product.name}`}
             fill
             sizes="(min-width: 768px) 28rem, 90vw"
@@ -89,12 +89,16 @@ export function ProductDetail({ product }: { product: Product }) {
 
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium text-foreground">{product.sizeHeading}</span>
-          <RadioGroup value={sizeId} onValueChange={setSizeId} className="flex flex-wrap gap-2">
+          <RadioGroup
+            value={sizeId}
+            onValueChange={setSizeId}
+            className={`grid gap-2 ${product.sizes.length === 3 ? "grid-cols-3" : "grid-cols-2 sm:max-w-sm"}`}
+          >
             {product.sizes.map((size) => (
               <Label
                 key={size.id}
                 htmlFor={`${product.slug}-${size.id}`}
-                className={`flex cursor-pointer flex-col items-start gap-0.5 rounded-2xl border-2 px-4 py-2.5 transition-colors ${
+                className={`flex cursor-pointer flex-col items-start gap-0.5 rounded-2xl border-2 px-3 py-2.5 transition-colors sm:px-4 ${
                   sizeId === size.id
                     ? "border-primary bg-primary/5"
                     : "border-border bg-card hover:border-foreground/30"
@@ -104,8 +108,9 @@ export function ProductDetail({ product }: { product: Product }) {
                   <RadioGroupItem value={size.id} id={`${product.slug}-${size.id}`} />
                   <span className="text-sm font-semibold text-foreground">{size.label}</span>
                 </span>
-                <span className="pl-6 text-xs text-muted-foreground">
-                  {size.volume}, {formatJMD(size.priceJMD)}
+                <span className="flex flex-col text-xs text-muted-foreground sm:pl-6">
+                  {size.volume}
+                  <span className="font-semibold text-foreground">{formatJMD(size.priceJMD)}</span>
                 </span>
               </Label>
             ))}

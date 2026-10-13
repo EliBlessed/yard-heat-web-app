@@ -110,9 +110,32 @@ test("every product page shows a full row of three related products", async ({ r
   }
 })
 
-test("unknown product shows a not-found page", async ({ page }) => {
+test("unknown product shows the branded not-found page", async ({ page }) => {
   const res = await page.goto("/product/does-not-exist")
   expect(res?.status()).toBe(404)
+  await expect(page.getByRole("heading", { level: 1, name: "This bottle’s empty" })).toBeVisible()
+  await page.getByRole("main").getByRole("button", { name: "Browse the shop" }).click()
+  await expect(page).toHaveURL(/\/shop$/)
+  await expect(page.getByRole("link", { name: "Shop", exact: true })).toHaveAttribute("aria-current", "page")
+})
+
+test("each product has its own share image", async ({ page, request }) => {
+  await page.goto("/product/smoky-jerk")
+  const og = await page.locator('meta[property="og:image"]').getAttribute("content")
+  expect(og).toContain("/product/smoky-jerk/opengraph-image")
+  const res = await request.get(new URL(og!).pathname)
+  expect(res.status()).toBe(200)
+  expect(res.headers()["content-type"]).toBe("image/png")
+})
+
+test("the shop is two columns on phones and three on desktop", async ({ page, isMobile }) => {
+  await page.goto("/shop")
+  const cards = page.getByTestId("product-card")
+  // offsetTop ignores the rise-in animation's transform, so cards mid-animation still line up.
+  const tops = await cards.evaluateAll((els) => els.slice(0, 3).map((el) => (el.parentElement as HTMLElement).offsetTop))
+  // On a phone the third card starts a new row; on desktop all three share one.
+  if (isMobile) expect(tops[2]).toBeGreaterThan(tops[0])
+  else expect(new Set(tops).size).toBe(1)
 })
 
 test("cart: add, persist after reload, change quantity, remove", async ({ page }) => {
@@ -161,8 +184,9 @@ test("checkout: parish delivery fee, demo order, cart empties", async ({ page })
   await expect(page.getByText("J$5,100")).toBeVisible()
 
   await page.getByRole("button", { name: "Place demo order" }).click()
-  await expect(page.getByText("Order confirmed!")).toBeVisible()
-  await expect(page.getByText(/no payment was processed/)).toBeVisible()
+  await expect(page.getByText("Demo order placed")).toBeVisible()
+  await expect(page.getByText(/No payment was taken/)).toBeVisible()
+  await expect(page.getByRole("button", { name: "Keep shopping" })).toHaveAttribute("href", "/shop")
   await expect(page.getByRole("link", { name: "Cart", exact: true })).toBeVisible()
   expect(errors).toEqual([])
 })

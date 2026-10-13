@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ShopBrowser } from "@/components/shop-browser"
-import { ProductCard } from "@/components/product-card"
+import { ProductCard, productGrid } from "@/components/product-card"
 import { products } from "@/lib/product"
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export default function ShopPage() {
             <div className="flex flex-col gap-8" aria-busy="true">
               <div className="h-[5.5rem] md:h-10" />
               <p className="text-sm text-muted-foreground">Showing {products.length} of {products.length} products</p>
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className={productGrid}>
                 {products.map((product, i) => (
                   <ProductCard key={product.slug} product={product} priority={i < 3} headingLevel={2} index={i} />
                 ))}
