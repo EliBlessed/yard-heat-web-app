@@ -33,19 +33,26 @@ test("hero video plays muted on wide screens and only the photo loads on phones"
   await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime)).toBeGreaterThan(start)
 })
 
-test("switching heat level slides the pill and swaps in three products", async ({ page }) => {
+test("the heat slider lights flames, warms the panel and reshuffles three products", async ({ page }) => {
   await page.goto("/")
-  const heat = page.getByRole("radiogroup", { name: "Heat level" })
-  for (const level of ["Hot", "Gentle", "Medium"]) {
-    await heat.getByRole("radio", { name: new RegExp(level) }).click()
-    await expect(heat.getByRole("radio", { name: new RegExp(level) })).toHaveAttribute("aria-checked", "true")
-    // The old row fades out first, so wait until all three cards belong to the new heat level.
-    const cards = page.locator("#heat [data-testid=product-card]")
-    await expect(cards.filter({ hasText: level })).toHaveCount(3)
+  const slider = page.getByRole("slider", { name: "Heat level" })
+  const panel = page.getByTestId("heat-panel")
+  const cards = page.locator("#heat [data-testid=product-card]")
+  const colours: string[] = []
+  for (const [level, band] of [["5", "Hot"], ["1", "Gentle"], ["3", "Medium"]]) {
+    await slider.fill(level)
+    await expect(slider).toHaveAttribute("aria-valuetext", new RegExp(`${level} of 5 flames, ${band}`))
+    await expect(page.locator("#heat .heat-flicker")).toHaveCount(Number(level))
+    // Old cards fade out first, so wait until all three belong to the new heat level.
+    await expect(cards.filter({ hasText: band })).toHaveCount(3)
     await expect(cards).toHaveCount(3)
-    await cards.first().scrollIntoViewIfNeeded()
-    await expect(cards.first()).toBeVisible()
+    await expect.poll(() => panel.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(colours.at(-1))
+    colours.push(await panel.evaluate((el) => getComputedStyle(el).backgroundColor))
   }
+  // Keyboard works too.
+  await slider.focus()
+  await page.keyboard.press("ArrowRight")
+  await expect(slider).toHaveValue("4")
 })
 
 test("product cards rise into view and their heat meters fill", async ({ page }) => {
@@ -77,5 +84,13 @@ test.describe("with reduced motion", () => {
     await page.goto("/shop")
     await expect(page.getByTestId("rise-in")).toHaveCount(0)
     await expect(page.getByTestId("product-card").first()).toBeVisible()
+  })
+
+  test("the heat slider changes products instantly and the flames stay still", async ({ page }) => {
+    await page.goto("/")
+    await page.getByRole("slider", { name: "Heat level" }).fill("5")
+    await expect(page.locator("#heat [data-testid=product-card]").filter({ hasText: "Hot" })).toHaveCount(3)
+    const animations = await page.locator("#heat .heat-flicker").evaluateAll((els) => els.map((el) => getComputedStyle(el).animationName))
+    expect(animations).toEqual(Array(5).fill("none"))
   })
 })

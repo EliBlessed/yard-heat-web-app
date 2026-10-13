@@ -36,17 +36,17 @@ test("home page loads with hero, heat picker and working links", async ({ page }
   await expect(page.getByRole("heading", { level: 1, name: "Real yard heat, bottled bold." })).toBeVisible()
   await expect(page.getByAltText(/Bottle of Yard Heat pepper sauce/)).toBeVisible()
 
-  // Heat picker: medium is selected by default, and every heat level fills a row of 3.
-  const heat = page.getByRole("radiogroup", { name: "Heat level" })
-  await expect(heat.getByRole("radio", { name: /Medium/ })).toHaveAttribute("aria-checked", "true")
+  // Heat slider: medium (3 of 5) by default, and every level fills a row of 3.
+  const heat = page.getByRole("slider", { name: "Heat level" })
+  await expect(heat).toHaveValue("3")
   await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(3)
   await expect(page.locator("#heat").getByText("Escovitch Pepper Sauce")).toBeVisible()
 
-  await heat.getByRole("radio", { name: /Gentle/ }).click()
+  await heat.fill("1")
   await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(3)
   await expect(page.locator("#heat").getByText("Pineapple Ginger Pepper Sauce")).toBeVisible()
 
-  await heat.getByRole("radio", { name: /Hot/ }).click()
+  await heat.fill("5")
   await expect(page.locator("#heat [data-testid=product-card]")).toHaveCount(3)
   await expect(page.locator("#heat").getByText("Fire-Roasted Scotch Bonnet Sauce")).toBeVisible()
   await expect(page.locator("#heat").getByText("Scotch Bonnet Fire Rub")).toBeVisible()
