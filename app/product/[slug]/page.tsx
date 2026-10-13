@@ -59,7 +59,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </h2>
             <div className={productRow}>
               {related.map((p, i) => (
-                <ProductCard key={p.slug} product={p} index={i} className={productRowItem} />
+                <ProductCard key={p.slug} product={p} index={i} className={productRowItem} morph={false} />
               ))}
             </div>
           </section>

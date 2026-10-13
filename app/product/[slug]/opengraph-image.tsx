@@ -42,7 +42,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             </svg>
             Yard Heat
           </div>
-          <div style={{ fontSize: 64, lineHeight: 1.02, color: "#2b1510" }}>{product.name}</div>
+          <div style={{ fontSize: product.name.length > 34 ? 48 : 64, lineHeight: 1.02, color: "#2b1510" }}>{product.name}</div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             {Array.from({ length: product.maxHeat }, (_, i) => (
               <svg key={i} viewBox="30 24 42 50" width={48} height={48} fill={i < product.heatLevel ? "#b91c22" : "#e3cd9f"}>

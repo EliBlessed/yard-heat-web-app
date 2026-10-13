@@ -1,3 +1,4 @@
+import { ViewTransition } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { HeatRating } from "@/components/heat-rating"
@@ -18,6 +19,7 @@ export function ProductCard({
   headingLevel = 3,
   index = 0,
   className = "flex",
+  morph = true,
 }: {
   product: Product
   priority?: boolean
@@ -26,18 +28,27 @@ export function ProductCard({
   index?: number
   /** Classes for the outer wrapper, e.g. a fixed width inside a phone carousel. */
   className?: string
+  /** Whether the photo morphs into the product page when clicked. Off where the product page itself lists cards. */
+  morph?: boolean
 }) {
   const Heading = headingLevel === 2 ? "h2" : "h3"
   const band = getHeatBand(product.heatLevel)
   const category = getCategory(product)
+  // The hover glow takes the colour of the heat: scallion green, pepper orange or Scotch bonnet red.
+  const glow = {
+    gentle: "hover:shadow-[0_18px_40px_-20px_rgb(47_93_52/0.6)] hover:ring-scallion/40",
+    medium: "hover:shadow-[0_18px_40px_-20px_rgb(232_118_44/0.65)] hover:ring-secondary/50",
+    hot: "hover:shadow-[0_18px_40px_-20px_rgb(185_28_34/0.5)] hover:ring-primary/40",
+  }[band.id]
 
   return (
     <RiseIn index={index} className={className}>
       <Link
         href={`/product/${product.slug}`}
         data-testid="product-card"
-        className="group flex w-full flex-col overflow-hidden rounded-[1.75rem] bg-card ring-1 ring-border transition-[box-shadow,translate] duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgb(122_16_22/0.45)] hover:ring-primary/40 motion-reduce:hover:translate-y-0"
+        className={`group flex w-full flex-col overflow-hidden rounded-[1.75rem] bg-card ring-1 ring-border transition-[box-shadow,translate] duration-300 hover:-translate-y-1 motion-reduce:hover:translate-y-0 ${glow}`}
       >
+        <ViewTransition name={morph ? `photo-${product.slug}` : undefined} share="photo-morph" default="none">
         <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
           <Image
             src={product.image}
@@ -51,6 +62,7 @@ export function ProductCard({
             {category === "rub" ? "Spice rub" : "Pepper sauce"}
           </span>
         </div>
+        </ViewTransition>
         <div className="flex flex-1 flex-col gap-2 p-3.5 sm:p-5">
           <Heading className="text-base leading-snug font-bold text-foreground sm:text-lg">{product.name}</Heading>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">

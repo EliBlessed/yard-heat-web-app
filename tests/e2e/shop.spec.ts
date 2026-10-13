@@ -144,7 +144,12 @@ test("cart: add, persist after reload, change quantity, remove", async ({ page }
   await page.getByText("150 ml", { exact: true }).click()
   await chooseOption(page, "#smoky-jerk-quantity", "2")
   await page.getByRole("button", { name: /Add to cart/ }).click()
-  await expect(page.getByRole("status").filter({ hasText: "Added to cart" })).toBeVisible()
+  // The drawer confirms what was added, then gets out of the way.
+  const drawer = page.getByRole("dialog", { name: "Added to your cart" })
+  await expect(drawer.getByText("150 ml · Travel bottle · Qty 2")).toBeVisible()
+  await expect(drawer.getByText("Cart subtotal, 2 items")).toBeVisible()
+  await drawer.getByRole("button", { name: "Keep browsing" }).click()
+  await expect(drawer).toBeHidden()
   await expect(page.getByRole("link", { name: "Cart, 2 items" })).toBeVisible()
 
   // The cart survives a reload.
@@ -226,7 +231,50 @@ test("adding to cart plays the fly-to-cart animation and cleans up after it", as
   // The flying copy of the photo appears, then is removed when it lands.
   await expect(page.locator("body > img[aria-hidden=true]")).toHaveCount(1)
   await expect(page.locator("body > img[aria-hidden=true]")).toHaveCount(0, { timeout: 3000 })
+  // It lands, then the drawer slides in; Escape closes it.
+  const drawer = page.getByRole("dialog", { name: "Added to your cart" })
+  await expect(drawer.getByText("Guava Scotch Bonnet Barbecue Sauce")).toBeVisible()
+  await page.keyboard.press("Escape")
+  await expect(drawer).toBeHidden()
   await expect(page.getByRole("link", { name: "Cart, 1 item" })).toBeVisible()
+})
+
+test("the cart drawer goes straight to checkout", async ({ page }) => {
+  await page.goto("/product/escovitch")
+  await page.getByRole("button", { name: /Add to cart/ }).click()
+  await page.getByRole("dialog", { name: "Added to your cart" }).getByRole("button", { name: "Checkout" }).click()
+  await expect(page).toHaveURL(/\/checkout/)
+  await expect(page.getByText("Escovitch Pepper Sauce")).toBeVisible()
+})
+
+test("on a phone, a buy bar stays on screen while the main buttons are out of view", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "The bar is phone-only")
+  await page.goto("/product/smoky-jerk")
+  const bar = page.getByTestId("sticky-buy-bar")
+  // The main buttons start below the fold, so the bar is there from the start.
+  await expect(bar).toHaveAttribute("aria-hidden", "false")
+  await page.getByTestId("product-price").scrollIntoViewIfNeeded()
+  await expect(bar).toHaveAttribute("aria-hidden", "true")
+  await page.evaluate(() => scrollTo(0, 0))
+  await bar.getByRole("button", { name: "Add 250 ml" }).click()
+  await expect(page.getByRole("dialog", { name: "Added to your cart" })).toBeVisible()
+})
+
+test("opening a product from the shop runs a view transition", async ({ page }) => {
+  await page.goto("/shop")
+  // Count view transitions the browser is asked to run.
+  await page.evaluate(() => {
+    const w = window as Window & { transitions?: number }
+    w.transitions = 0
+    const start = document.startViewTransition.bind(document)
+    document.startViewTransition = ((arg: Parameters<typeof start>[0]) => {
+      w.transitions!++
+      return start(arg)
+    }) as typeof document.startViewTransition
+  })
+  await page.locator('a[href="/product/escovitch"]').click()
+  await expect(page.getByRole("heading", { level: 1, name: "Escovitch Pepper Sauce" })).toBeVisible()
+  expect(await page.evaluate(() => (window as Window & { transitions?: number }).transitions)).toBeGreaterThan(0)
 })
 
 test.describe("with reduced motion", () => {
@@ -242,6 +290,9 @@ test.describe("with reduced motion", () => {
     await page.goto("/product/guava-bbq")
     await page.getByRole("button", { name: /Add to cart/ }).click()
     await expect(page.locator("body > img[aria-hidden=true]")).toHaveCount(0)
+    // No flight to wait for: the drawer opens at once.
+    await expect(page.getByRole("dialog", { name: "Added to your cart" })).toBeVisible()
+    await page.keyboard.press("Escape")
     await expect(page.getByRole("link", { name: "Cart, 1 item" })).toBeVisible()
   })
 })

@@ -1,18 +1,23 @@
 /**
- * Sends a small copy of a product image flying into the cart button.
- * Does nothing for people who prefer reduced motion, or if either element is missing.
+ * Sends a small copy of a product image flying into the cart button, then calls `onLanded`.
+ * If the photo has scrolled off screen, the copy takes off from `button` instead.
+ * Skips the flight (and calls `onLanded` straight away) for people who prefer reduced motion,
+ * or if either element is missing.
  */
-export function flyToCart(source: HTMLElement | null) {
-  if (typeof window === "undefined" || !source) return
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+export function flyToCart(source: HTMLElement | null, onLanded?: () => void, button?: HTMLElement | null) {
+  const land = () => onLanded?.()
+  if (typeof window === "undefined" || !source) return land()
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return land()
 
   const target = document.querySelector<HTMLElement>("[data-cart-target]")
   const img = source.querySelector("img")
-  if (!target || !img) return
+  if (!target || !img) return land()
 
-  const from = img.getBoundingClientRect()
+  const photo = img.getBoundingClientRect()
+  const offScreen = photo.bottom < 0 || photo.top > window.innerHeight
+  const from = offScreen && button ? button.getBoundingClientRect() : photo
   const to = target.getBoundingClientRect()
-  const size = Math.min(from.width, from.height, 160)
+  const size = Math.min(from.width, from.height, offScreen ? 64 : 160)
 
   const ghost = img.cloneNode(true) as HTMLImageElement
   ghost.removeAttribute("srcset")
@@ -45,6 +50,7 @@ export function flyToCart(source: HTMLElement | null) {
   )
   flight.onfinish = () => {
     ghost.remove()
+    land()
     target.animate(
       [{ transform: "scale(1)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }],
       { duration: 320, easing: "ease-out" },
